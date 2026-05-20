@@ -11,62 +11,35 @@ import { parse as parseYaml } from "yaml";
 import type { TrustPolicyGroup, PolicyManifest, ResolvedPolicy, CommandEntry } from "./types.js";
 import { GLOBAL_POLICY_DIR, STARTERS_DIR, getLocalPolicyDir } from "./paths.js";
 
+interface ResolutionContext {
+  localDir: string;
+  groupCache: Map<string, TrustPolicyGroup | null>;
+  warnings: string[];
+}
+
 export function resolvePolicy(cwd: string): ResolvedPolicy {
-  const warnings: string[] = [];
-  const groups = new Map<string, { description: string; commands: CommandEntry[] }>();
   const localDir = getLocalPolicyDir(cwd);
+  const ctx: ResolutionContext = {
+    localDir,
+    groupCache: new Map(),
+    warnings: [],
+  };
 
   const activeNames = collectActiveNames(localDir);
-  const groupCache = new Map<string, TrustPolicyGroup | null>();
-
-  function findGroup(name: string): TrustPolicyGroup | null {
-    if (groupCache.has(name)) return groupCache.get(name)!;
-
-    const group =
-      loadGroupFromDir(localDir, name) ??
-      loadGroupFromDir(GLOBAL_POLICY_DIR, name) ??
-      loadGroupFromDir(STARTERS_DIR, name);
-
-    groupCache.set(name, group);
-    return group;
-  }
-
-  function resolveGroup(name: string, visited: Set<string>): CommandEntry[] {
-    if (visited.has(name)) {
-      warnings.push(`Circular reference detected: '${name}' already in resolution chain`);
-      return [];
-    }
-
-    const group = findGroup(name);
-    if (!group) {
-      warnings.push(`Trust policy group '${name}' not found`);
-      return [];
-    }
-
-    visited.add(name);
-    const commands: CommandEntry[] = [...group.commands];
-
-    if (group.includes) {
-      for (const includeName of group.includes) {
-        commands.push(...resolveGroup(includeName, new Set(visited)));
-      }
-    }
-
-    return commands;
-  }
-
+  const groups = new Map<string, { description: string; commands: CommandEntry[] }>();
   const allCommands: CommandEntry[] = [];
+
   for (const name of activeNames) {
-    const commands = resolveGroup(name, new Set());
+    const commands = resolveGroup(name, new Set(), ctx);
     allCommands.push(...commands);
 
-    const group = findGroup(name);
+    const group = findGroup(name, ctx);
     if (group) {
       groups.set(name, { description: group.description, commands });
     }
   }
 
-  return { commands: allCommands, groups, warnings };
+  return { commands: allCommands, groups, warnings: ctx.warnings };
 }
 
 export function loadStarterGroup(name: string): TrustPolicyGroup | null {
@@ -80,7 +53,76 @@ export function listStarters(): string[] {
     .map((f) => f.replace(/\.yaml$/, ""));
 }
 
-// --- Private helpers ---
+export interface DiscoveredGroup {
+  name: string;
+  source: "local" | "global" | "starter";
+  description: string;
+}
+
+export function listAllGroups(cwd: string): DiscoveredGroup[] {
+  const localDir = getLocalPolicyDir(cwd);
+  const seen = new Set<string>();
+  const groups: DiscoveredGroup[] = [];
+
+  for (const [dir, source] of [
+    [localDir, "local"],
+    [GLOBAL_POLICY_DIR, "global"],
+    [STARTERS_DIR, "starter"],
+  ] as const) {
+    if (!existsSync(dir)) continue;
+    for (const file of readdirSync(dir)) {
+      if (!file.endsWith(".yaml")) continue;
+      const name = file.replace(/\.yaml$/, "");
+      if (!seen.has(name)) {
+        seen.add(name);
+        const group = loadGroupFromDir(dir, name);
+        groups.push({ name, source, description: group?.description ?? "" });
+      }
+    }
+  }
+
+  return groups;
+}
+
+// --- Resolution helpers ---
+
+function findGroup(name: string, ctx: ResolutionContext): TrustPolicyGroup | null {
+  if (ctx.groupCache.has(name)) return ctx.groupCache.get(name)!;
+
+  const group =
+    loadGroupFromDir(ctx.localDir, name) ??
+    loadGroupFromDir(GLOBAL_POLICY_DIR, name) ??
+    loadGroupFromDir(STARTERS_DIR, name);
+
+  ctx.groupCache.set(name, group);
+  return group;
+}
+
+function resolveGroup(name: string, visited: Set<string>, ctx: ResolutionContext): CommandEntry[] {
+  if (visited.has(name)) {
+    ctx.warnings.push(`Circular reference detected: '${name}' already in resolution chain`);
+    return [];
+  }
+
+  const group = findGroup(name, ctx);
+  if (!group) {
+    ctx.warnings.push(`Trust policy group '${name}' not found`);
+    return [];
+  }
+
+  visited.add(name);
+  const commands: CommandEntry[] = [...group.commands];
+
+  if (group.includes) {
+    for (const includeName of group.includes) {
+      commands.push(...resolveGroup(includeName, new Set(visited), ctx));
+    }
+  }
+
+  return commands;
+}
+
+// --- File I/O helpers ---
 
 function collectActiveNames(localDir: string): Set<string> {
   const names = new Set<string>();

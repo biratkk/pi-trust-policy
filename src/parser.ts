@@ -80,25 +80,24 @@ function isBashC(node: Command): { inner: string } | null {
 /**
  * Extract all CommandExpansion parts from a word's parts tree.
  */
-function extractCommandExpansions(word: Word): CommandExpansionPart[] {
-  const expansions: CommandExpansionPart[] = [];
-
-  function walkParts(parts: WordPart[] | undefined) {
-    if (!parts) return;
-    for (const part of parts) {
-      if (part.type === "CommandExpansion") {
-        expansions.push(part);
-      } else if (part.type === "DoubleQuoted") {
-        for (const child of part.parts) {
-          if (child.type === "CommandExpansion") {
-            expansions.push(child);
-          }
+function collectExpansionsFromParts(parts: WordPart[] | undefined, out: CommandExpansionPart[]): void {
+  if (!parts) return;
+  for (const part of parts) {
+    if (part.type === "CommandExpansion") {
+      out.push(part);
+    } else if (part.type === "DoubleQuoted") {
+      for (const child of part.parts) {
+        if (child.type === "CommandExpansion") {
+          out.push(child);
         }
       }
     }
   }
+}
 
-  walkParts(word.parts);
+function extractCommandExpansions(word: Word): CommandExpansionPart[] {
+  const expansions: CommandExpansionPart[] = [];
+  collectExpansionsFromParts(word.parts, expansions);
   return expansions;
 }
 
