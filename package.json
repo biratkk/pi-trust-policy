@@ -1,0 +1,20 @@
+{
+  "name": "pi-trust-policy",
+  "version": "0.1.0",
+  "description": "Trust policy extension for pi - bash command allowlist groups",
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "dependencies": {
+    "minimatch": "^10.2.5",
+    "unbash": "^3.0.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^0.75.4",
+    "@types/node": "^22.0.0",
+    "typescript": "^6.0.3"
+  }
+}

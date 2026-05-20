@@ -1,0 +1,44 @@
+name: node-dev
+description: Node.js development commands for running scripts, tests, and package management
+
+commands:
+  - glob: "npm run *"
+    description: "Run package scripts"
+    pipe: true
+    embedded: false
+  - glob: "npm test *"
+    description: "Run tests with arguments"
+    pipe: true
+    embedded: false
+  - glob: "npm test"
+    description: "Run tests"
+    pipe: true
+    embedded: false
+  - glob: "npm install *"
+    description: "Install packages"
+    pipe: false
+    embedded: false
+  - glob: "npm install"
+    description: "Install all dependencies"
+    pipe: false
+    embedded: false
+  - glob: "npx *"
+    description: "Execute npm package binaries"
+    pipe: true
+    embedded: false
+  - glob: "node *"
+    description: "Run Node.js scripts"
+    pipe: true
+    embedded: true
+  - glob: "npm ls *"
+    description: "List installed packages"
+    pipe: true
+    embedded: true
+  - glob: "npm outdated"
+    description: "Check for outdated packages"
+    pipe: true
+    embedded: false
+  - glob: "npm info *"
+    description: "Show package information"
+    pipe: true
+    embedded: true

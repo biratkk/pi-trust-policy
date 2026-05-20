@@ -1,0 +1,44 @@
+name: git-readonly
+description: Read-only git commands for inspecting repo history and status
+
+commands:
+  - glob: "git log *"
+    description: "View commit history"
+    pipe: true
+    embedded: true
+  - glob: "git log"
+    description: "View commit history (no args)"
+    pipe: true
+    embedded: true
+  - glob: "git diff *"
+    description: "Compare changes between commits, staging, and working tree"
+    pipe: true
+    embedded: true
+  - glob: "git diff"
+    description: "Compare working tree changes"
+    pipe: true
+    embedded: true
+  - glob: "git status"
+    description: "Show working tree status"
+    pipe: true
+    embedded: true
+  - glob: "git status *"
+    description: "Show working tree status with options"
+    pipe: true
+    embedded: true
+  - glob: "git show *"
+    description: "Display commit details and content"
+    pipe: true
+    embedded: true
+  - glob: "git branch --list*"
+    description: "List branches"
+    pipe: true
+    embedded: true
+  - glob: "git branch -a"
+    description: "List all branches"
+    pipe: true
+    embedded: true
+  - glob: "git remote -v"
+    description: "Show remote URLs"
+    pipe: true
+    embedded: true
