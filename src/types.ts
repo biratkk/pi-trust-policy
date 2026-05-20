@@ -1,7 +1,3 @@
-/**
- * Trust Policy Types
- */
-
 export interface CommandEntry {
   glob: string;
   description?: string;
@@ -21,17 +17,9 @@ export interface PolicyManifest {
 }
 
 export interface ResolvedPolicy {
-  /** All command entries flattened from active groups and their includes */
   commands: CommandEntry[];
-  /** Map of group name to its resolved commands (for UI display) */
-  groups: Map<string, GroupSummary>;
-  /** Warnings encountered during loading */
+  groups: Map<string, { description: string; commands: CommandEntry[] }>;
   warnings: string[];
-}
-
-export interface GroupSummary {
-  description: string;
-  commands: CommandEntry[];
 }
 
 export interface ValidationResult {
