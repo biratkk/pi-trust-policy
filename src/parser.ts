@@ -1,6 +1,6 @@
 import { parse } from "unbash";
 import type { Script, Node, Command, Word, WordPart, CommandExpansionPart } from "unbash";
-import type { CommandSegment } from "./types.js";
+import type { CommandSegment } from "./types";
 
 export function parseCommand(command: string): { segments: CommandSegment[]; unparseable: boolean } {
   const trimmed = command.trim();

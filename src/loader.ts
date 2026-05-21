@@ -1,8 +1,8 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
-import type { TrustPolicyGroup, PolicyManifest, ResolvedPolicy, CommandEntry } from "./types.js";
-import { GLOBAL_POLICY_DIR, STARTERS_DIR, getLocalPolicyDir } from "./paths.js";
+import type { TrustPolicyGroup, PolicyManifest, ResolvedPolicy, CommandEntry } from "./types";
+import { GLOBAL_POLICY_DIR, STARTERS_DIR, getLocalPolicyDir } from "./paths";
 
 export interface DiscoveredGroup {
   name: string;

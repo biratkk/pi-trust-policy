@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import type { TrustPolicyGroup, PolicyManifest, CommandEntry } from "./types.js";
-import { STARTERS_DIR } from "./paths.js";
+import type { TrustPolicyGroup, PolicyManifest, CommandEntry } from "./types";
+import { STARTERS_DIR } from "./paths";
 
 export function writeGroupFile(group: TrustPolicyGroup, dir: string): string {
   mkdirSync(dir, { recursive: true });

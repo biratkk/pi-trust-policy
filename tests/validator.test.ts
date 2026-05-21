@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { validateCommand, isValidGlob, generateGlobExamples } from "../src/validator.js";
-import type { ResolvedPolicy, CommandEntry } from "../src/types.js";
+import { validateCommand, isValidGlob, generateGlobExamples } from "../src/validator";
+import type { ResolvedPolicy, CommandEntry } from "../src/types";
 
 function buildPolicy(entries: CommandEntry[]): ResolvedPolicy {
   return {

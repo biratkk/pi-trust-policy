@@ -1,6 +1,6 @@
 import { minimatch } from "minimatch";
-import type { CommandEntry, ResolvedPolicy, ValidationResult } from "./types.js";
-import { parseCommand } from "./parser.js";
+import type { CommandEntry, ResolvedPolicy, ValidationResult } from "./types";
+import { parseCommand } from "./parser";
 
 const GLOB_OPTIONS = { dot: true, nocase: false, partial: false };
 

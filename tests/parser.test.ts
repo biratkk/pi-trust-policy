@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { parseCommand } from "../src/parser.js";
-import type { CommandSegment } from "../src/types.js";
+import { parseCommand } from "../src/parser";
+import type { CommandSegment } from "../src/types";
 
 function segments(command: string): CommandSegment[] {
   const result = parseCommand(command);

@@ -1,11 +1,11 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { isToolCallEventType, getSettingsListTheme } from "@earendil-works/pi-coding-agent";
 import { Container, SettingsList, type SettingItem } from "@earendil-works/pi-tui";
-import type { ResolvedPolicy, CommandEntry } from "./types.js";
-import { GLOBAL_POLICY_DIR, getLocalPolicyDir } from "./paths.js";
-import { resolvePolicy, listStarters, listAllGroups } from "./loader.js";
-import { validateCommand, isValidGlob, generateGlobExamples } from "./validator.js";
-import { addCommandToGroup, setGroupActive, copyStarter, readManifest } from "./writer.js";
+import type { ResolvedPolicy, CommandEntry } from "./types";
+import { GLOBAL_POLICY_DIR, getLocalPolicyDir } from "./paths";
+import { resolvePolicy, listStarters, listAllGroups } from "./loader";
+import { validateCommand, isValidGlob, generateGlobExamples } from "./validator";
+import { addCommandToGroup, setGroupActive, copyStarter, readManifest } from "./writer";
 
 
 interface State {
