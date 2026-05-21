@@ -87,6 +87,7 @@ async function openPolicyManager(cwd: string, ctx: ExtensionContext): Promise<vo
         applyActivationState(id, newValue, localDir);
       },
       () => done(undefined),
+      { enableSearch: true },
     );
     container.addChild(list);
 
