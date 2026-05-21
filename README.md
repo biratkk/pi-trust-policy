@@ -14,6 +14,16 @@ Or for a quick test:
 pi -e git:github.com/biratkk/pi-trust-policy
 ```
 
+## Getting Started
+
+After installing, open pi and run:
+
+```
+/trust-policy
+```
+
+That's it. Type to search, Enter to cycle activation states.
+
 ## Usage
 
 ### 1. Write a policy YAML file
