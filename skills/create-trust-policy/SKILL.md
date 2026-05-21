@@ -42,3 +42,4 @@ commands:
 - Defaults: `pipe: false`, `embedded: false`, `redirect: none`. Only specify when `true`/non-default.
 - Aggregate policies (with `includes`, empty `commands`) appear in the TUI. Per-tool policies don't.
 - Classify by risk: read (stdout only), write (creates/modifies files), destructive (irrecoverable data loss).
+- When unsure about risk level, be overly cautious. If a command *could* cause data loss, classify it as destructive. Example: `mv` could be considered write, but it destroys the source — so it belongs in destructive.
