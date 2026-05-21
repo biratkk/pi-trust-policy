@@ -6,8 +6,8 @@
 
 ## Architecture Principles
 
-- **Composition over flat lists.** Policies are organized as layered taxonomies (read → write → destructive). Per-tool policies are atomic building blocks; aggregate policies compose them via `includes`. Only aggregates are surfaced in the TUI — internals stay internal.
+- **Composition over flat lists.** Per-tool policies are building blocks. Aggregate policies compose them via `includes`. Only aggregates appear in the TUI.
 
 ## Workflow
 
-- **Commit incrementally.** Each commit is one self-contained change (feature, fix, or refactor). Verify with `tsc --noEmit` and `vitest run` before every commit. Never batch unrelated changes into a single commit.
+- **One commit per change.** Verify with `tsc --noEmit` and `vitest run` before every commit.
