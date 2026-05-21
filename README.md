@@ -47,8 +47,6 @@ Run `/trust-policy` in pi to open the TUI manager. Type to fuzzy-search, Enter/S
 | `global` | Active in `~/.pi/agent/trust-policy/` (all projects) |
 | `global & local` | Active in both scopes |
 
-![Policy Manager TUI](assets/policy-manager-screenshot.png)
-
 Or manually create `~/.pi/agent/trust-policy/policy.json`:
 
 ```json
