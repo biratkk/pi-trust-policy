@@ -1,0 +1,12 @@
+name: cp-write
+description: cp — copies files and directories (source preserved, target may be overwritten)
+
+commands:
+  - glob: "cp {*,*/**}"
+    description: "Copy files and directories"
+    pipe: false
+    embedded: false
+  - glob: "cp -r {*,*/**}"
+    description: "Copy directories recursively"
+    pipe: false
+    embedded: false

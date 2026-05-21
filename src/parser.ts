@@ -89,9 +89,23 @@ function processCommand(node: Command, requiresPipe: boolean, requiresEmbedded: 
     if (!processExpansions(node.name, segments)) return null;
   }
 
+  const redirect = detectRedirect(node);
   const commandText = [node.name.text, ...node.suffix.map((w) => w.text)].join(" ");
-  segments.push({ command: commandText, requiresPipe, requiresEmbedded });
+  segments.push({ command: commandText, requiresPipe, requiresEmbedded, redirect });
   return segments;
+}
+
+function detectRedirect(node: Command): "none" | "append" | "overwrite" {
+  if (!node.redirects || node.redirects.length === 0) return "none";
+  let hasOverwrite = false;
+  let hasAppend = false;
+  for (const redir of node.redirects) {
+    if (redir.operator === ">") hasOverwrite = true;
+    else if (redir.operator === ">>") hasAppend = true;
+  }
+  if (hasOverwrite) return "overwrite";
+  if (hasAppend) return "append";
+  return "none";
 }
 
 function isUnparseableName(node: Command): boolean {

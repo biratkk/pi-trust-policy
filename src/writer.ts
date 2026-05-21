@@ -73,5 +73,6 @@ function serializeCommand(cmd: CommandEntry): Record<string, unknown> {
   if (cmd.description) entry.description = cmd.description;
   if (cmd.pipe) entry.pipe = true;
   if (cmd.embedded) entry.embedded = true;
+  if (cmd.redirect !== "none") entry.redirect = cmd.redirect;
   return entry;
 }

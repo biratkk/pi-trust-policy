@@ -16,7 +16,7 @@ describe("parseCommand", () => {
   describe("simple commands", () => {
     it("parses a single command", () => {
       expect(segments("git status")).toEqual([
-        { command: "git status", requiresPipe: false, requiresEmbedded: false },
+        { command: "git status", requiresPipe: false, requiresEmbedded: false, redirect: "none" },
       ]);
     });
 
@@ -90,6 +90,32 @@ describe("parseCommand", () => {
 
     it("rejects eval", () => {
       expectUnparseable('eval "rm -rf /"');
+    });
+  });
+
+  describe("redirects", () => {
+    it("detects overwrite redirect >", () => {
+      const segs = segments("echo hello > file.txt");
+      expect(segs).toHaveLength(1);
+      expect(segs[0].command).toBe("echo hello");
+      expect(segs[0].redirect).toBe("overwrite");
+    });
+
+    it("detects append redirect >>", () => {
+      const segs = segments("echo hello >> file.txt");
+      expect(segs).toHaveLength(1);
+      expect(segs[0].command).toBe("echo hello");
+      expect(segs[0].redirect).toBe("append");
+    });
+
+    it("marks no redirect for plain commands", () => {
+      const segs = segments("cat file.txt");
+      expect(segs[0].redirect).toBe("none");
+    });
+
+    it("overwrite takes precedence over append", () => {
+      const segs = segments("echo hello >> log.txt > out.txt");
+      expect(segs[0].redirect).toBe("overwrite");
     });
   });
 });

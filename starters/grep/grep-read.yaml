@@ -1,0 +1,8 @@
+name: grep-read
+description: Read-only grep for searching text in files and streams
+
+commands:
+  - glob: "grep {*,*/**}"
+    description: "Search text with patterns"
+    pipe: true
+    embedded: true

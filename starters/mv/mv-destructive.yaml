@@ -1,0 +1,8 @@
+name: mv-destructive
+description: mv — moves/renames files (source is destroyed, target may be overwritten)
+
+commands:
+  - glob: "mv {*,*/**}"
+    description: "Move or rename files and directories"
+    pipe: false
+    embedded: false

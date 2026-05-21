@@ -1,0 +1,12 @@
+name: unix-write
+description: Unix utilities that create or modify files — no irrecoverable data loss
+
+includes:
+  - sed-write
+  - awk-write
+  - tee-write
+  - cp-write
+  - curl-write
+  - sort-write
+
+commands: []

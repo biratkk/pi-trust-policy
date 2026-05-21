@@ -1,8 +1,11 @@
+export type RedirectMode = "none" | "append" | "overwrite" | "both";
+
 export interface CommandEntry {
   glob: string;
   description?: string;
   pipe: boolean;
   embedded: boolean;
+  redirect: RedirectMode;
 }
 
 export interface TrustPolicyGroup {
@@ -33,4 +36,5 @@ export interface CommandSegment {
   command: string;
   requiresPipe: boolean;
   requiresEmbedded: boolean;
+  redirect: "none" | "append" | "overwrite";
 }

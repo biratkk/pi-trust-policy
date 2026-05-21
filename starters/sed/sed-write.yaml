@@ -1,0 +1,9 @@
+name: sed-write
+description: sed stream editor — classified as write since it transforms text (commonly used with -i for in-place edits)
+
+commands:
+  - glob: "sed {*,*/**}"
+    description: "Stream editor for text transformation"
+    pipe: true
+    embedded: true
+    redirect: append

@@ -1,0 +1,20 @@
+name: rm-destructive
+description: rm — removes files and directories (irrecoverable data loss)
+
+commands:
+  - glob: "rm {*,*/**}"
+    description: "Remove files"
+    pipe: false
+    embedded: false
+  - glob: "rm -r {*,*/**}"
+    description: "Remove directories recursively"
+    pipe: false
+    embedded: false
+  - glob: "rm -rf {*,*/**}"
+    description: "Force remove directories recursively"
+    pipe: false
+    embedded: false
+  - glob: "rm -f {*,*/**}"
+    description: "Force remove files"
+    pipe: false
+    embedded: false

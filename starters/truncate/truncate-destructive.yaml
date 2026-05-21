@@ -1,0 +1,8 @@
+name: truncate-destructive
+description: truncate — shrinks or extends files, destroying existing content
+
+commands:
+  - glob: "truncate {*,*/**}"
+    description: "Truncate or extend file size (destroys content)"
+    pipe: false
+    embedded: false

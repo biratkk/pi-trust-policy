@@ -1,0 +1,8 @@
+name: find-read
+description: Read-only find for searching files in directory trees
+
+commands:
+  - glob: "find {*,*/**}"
+    description: "Search for files in directory trees"
+    pipe: true
+    embedded: true

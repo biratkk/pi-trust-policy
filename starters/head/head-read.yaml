@@ -1,0 +1,12 @@
+name: head-read
+description: Read-only head for displaying first lines of files
+
+commands:
+  - glob: "head {*,*/**}"
+    description: "Show first lines of input"
+    pipe: true
+    embedded: true
+  - glob: "head"
+    description: "Show first lines from stdin"
+    pipe: true
+    embedded: true

@@ -1,0 +1,12 @@
+name: tail-read
+description: Read-only tail for displaying last lines of files
+
+commands:
+  - glob: "tail {*,*/**}"
+    description: "Show last lines of input"
+    pipe: true
+    embedded: true
+  - glob: "tail"
+    description: "Show last lines from stdin"
+    pipe: true
+    embedded: true

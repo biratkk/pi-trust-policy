@@ -1,0 +1,12 @@
+name: sort-read
+description: Read-only sort for sorting lines to stdout
+
+commands:
+  - glob: "sort {*,*/**}"
+    description: "Sort lines"
+    pipe: true
+    embedded: true
+  - glob: "sort"
+    description: "Sort from stdin"
+    pipe: true
+    embedded: true

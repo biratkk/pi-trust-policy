@@ -1,0 +1,14 @@
+name: tee-write
+description: tee — writes stdin to files while passing through to stdout
+
+commands:
+  - glob: "tee {*,*/**}"
+    description: "Write stdin to files and stdout"
+    pipe: true
+    embedded: false
+    redirect: append
+  - glob: "tee -a {*,*/**}"
+    description: "Append stdin to files and stdout"
+    pipe: true
+    embedded: false
+    redirect: append

@@ -1,0 +1,12 @@
+name: curl-write
+description: curl with output to file — classified as write since it creates/overwrites files
+
+commands:
+  - glob: "curl -o {*,*/**}"
+    description: "Download to file with -o"
+    pipe: false
+    embedded: false
+  - glob: "curl --output {*,*/**}"
+    description: "Download to file with --output"
+    pipe: false
+    embedded: false

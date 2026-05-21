@@ -1,0 +1,15 @@
+name: unix-read
+description: Read-only Unix utilities — safe commands that only output to stdout/stderr
+
+includes:
+  - grep-read
+  - cat-read
+  - ls-read
+  - head-read
+  - tail-read
+  - wc-read
+  - find-read
+  - cut-read
+  - sort-read
+
+commands: []

@@ -15,16 +15,17 @@ export function validateCommand(command: string, policy: ResolvedPolicy): Valida
   }
 
   for (const seg of segments) {
-    if (!findMatch(seg.command, seg.requiresPipe, seg.requiresEmbedded, policy.commands)) {
+    if (!findMatch(seg.command, seg.requiresPipe, seg.requiresEmbedded, seg.redirect, policy.commands)) {
       const parts = [`Command segment not covered by any trust policy: ${seg.command}`];
       if (seg.requiresPipe) parts.push("(requires pipe: true)");
       if (seg.requiresEmbedded) parts.push("(requires embedded: true)");
+      if (seg.redirect !== "none") parts.push(`(requires redirect: ${seg.redirect} or both)`);
       return { allowed: false, reason: parts.join(" ") };
     }
   }
 
   const primary = segments[0];
-  const match = findMatchingGroup(primary.command, primary.requiresPipe, primary.requiresEmbedded, policy);
+  const match = findMatchingGroup(primary.command, primary.requiresPipe, primary.requiresEmbedded, primary.redirect, policy);
   return { allowed: true, matchedGroup: match?.groupName, matchedGlob: match?.glob };
 }
 
@@ -66,22 +67,32 @@ export function generateGlobExamples(glob: string): { matches: string[]; nonMatc
   return { matches: [glob], nonMatches: [`${glob} extra-arg`, `${base} different`] };
 }
 
-function findMatch(command: string, needsPipe: boolean, needsEmbedded: boolean, entries: CommandEntry[]): CommandEntry | null {
+function findMatch(command: string, needsPipe: boolean, needsEmbedded: boolean, needsRedirect: "none" | "append" | "overwrite", entries: CommandEntry[]): CommandEntry | null {
   for (const entry of entries) {
     if (needsPipe && !entry.pipe) continue;
     if (needsEmbedded && !entry.embedded) continue;
+    if (!redirectAllowed(needsRedirect, entry.redirect)) continue;
     if (minimatch(command, entry.glob, GLOB_OPTIONS)) return entry;
   }
   return null;
 }
 
-function findMatchingGroup(command: string, needsPipe: boolean, needsEmbedded: boolean, policy: ResolvedPolicy): { groupName: string; glob: string } | null {
+function findMatchingGroup(command: string, needsPipe: boolean, needsEmbedded: boolean, needsRedirect: "none" | "append" | "overwrite", policy: ResolvedPolicy): { groupName: string; glob: string } | null {
   for (const [groupName, group] of policy.groups) {
     for (const entry of group.commands) {
       if (needsPipe && !entry.pipe) continue;
       if (needsEmbedded && !entry.embedded) continue;
+      if (!redirectAllowed(needsRedirect, entry.redirect)) continue;
       if (minimatch(command, entry.glob, GLOB_OPTIONS)) return { groupName, glob: entry.glob };
     }
   }
   return null;
+}
+
+function redirectAllowed(needed: "none" | "append" | "overwrite", allowed: "none" | "append" | "overwrite" | "both"): boolean {
+  if (needed === "none") return true;
+  if (allowed === "both") return true;
+  if (needed === "append" && allowed === "append") return true;
+  if (needed === "overwrite" && allowed === "overwrite") return true;
+  return false;
 }

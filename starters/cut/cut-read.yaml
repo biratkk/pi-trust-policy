@@ -1,0 +1,8 @@
+name: cut-read
+description: Read-only cut for extracting fields from lines
+
+commands:
+  - glob: "cut {*,*/**}"
+    description: "Extract fields from lines"
+    pipe: true
+    embedded: true

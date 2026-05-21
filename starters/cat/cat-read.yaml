@@ -1,0 +1,8 @@
+name: cat-read
+description: Read-only cat for displaying file contents
+
+commands:
+  - glob: "cat {*,*/**}"
+    description: "Concatenate and display files"
+    pipe: true
+    embedded: true

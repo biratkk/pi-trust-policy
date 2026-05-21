@@ -1,0 +1,12 @@
+name: ls-read
+description: Read-only ls for listing directory contents
+
+commands:
+  - glob: "ls {*,*/**}"
+    description: "List directory contents"
+    pipe: true
+    embedded: true
+  - glob: "ls"
+    description: "List current directory"
+    pipe: true
+    embedded: true

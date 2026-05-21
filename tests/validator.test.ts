@@ -11,12 +11,12 @@ function buildPolicy(entries: CommandEntry[]): ResolvedPolicy {
 }
 
 const POLICY = buildPolicy([
-  { glob: "git log *", pipe: true, embedded: true },
-  { glob: "git log", pipe: true, embedded: true },
-  { glob: "git status", pipe: true, embedded: false },
-  { glob: "grep *", pipe: true, embedded: true },
-  { glob: "wc *", pipe: true, embedded: true },
-  { glob: "echo *", pipe: false, embedded: false },
+  { glob: "git log *", pipe: true, embedded: true, redirect: "none" },
+  { glob: "git log", pipe: true, embedded: true, redirect: "none" },
+  { glob: "git status", pipe: true, embedded: false, redirect: "none" },
+  { glob: "grep *", pipe: true, embedded: true, redirect: "none" },
+  { glob: "wc *", pipe: true, embedded: true, redirect: "none" },
+  { glob: "echo *", pipe: false, embedded: false, redirect: "none" },
 ]);
 
 describe("validateCommand", () => {
@@ -30,17 +30,17 @@ describe("validateCommand", () => {
     });
 
     it("allows 'cat file.txt' with glob 'cat *'", () => {
-      const policy = buildPolicy([{ glob: "cat *", pipe: true, embedded: false }]);
+      const policy = buildPolicy([{ glob: "cat *", pipe: true, embedded: false, redirect: "none" }]);
       expect(validateCommand("cat file.txt", policy).allowed).toBe(true);
     });
 
     it("denies 'cat /file/path' with glob 'cat *' because * does not match /", () => {
-      const policy = buildPolicy([{ glob: "cat *", pipe: true, embedded: false }]);
+      const policy = buildPolicy([{ glob: "cat *", pipe: true, embedded: false, redirect: "none" }]);
       expect(validateCommand("cat /file/path", policy).allowed).toBe(false);
     });
 
     it("allows 'cat /file/path' with glob 'cat */**'", () => {
-      const policy = buildPolicy([{ glob: "cat */**", pipe: true, embedded: false }]);
+      const policy = buildPolicy([{ glob: "cat */**", pipe: true, embedded: false, redirect: "none" }]);
       expect(validateCommand("cat /file/path", policy).allowed).toBe(true);
     });
 
@@ -85,8 +85,8 @@ describe("validateCommand", () => {
   describe("pipe/embedded flag enforcement", () => {
     it("denies pipeline when segment lacks pipe: true", () => {
       const policy = buildPolicy([
-        { glob: "echo *", pipe: false, embedded: false },
-        { glob: "grep *", pipe: true, embedded: false },
+        { glob: "echo *", pipe: false, embedded: false, redirect: "none" },
+        { glob: "grep *", pipe: true, embedded: false, redirect: "none" },
       ]);
       const result = validateCommand("echo hello | grep h", policy);
       expect(result.allowed).toBe(false);
@@ -95,12 +95,69 @@ describe("validateCommand", () => {
 
     it("denies substitution when segment lacks embedded: true", () => {
       const policy = buildPolicy([
-        { glob: "echo *", pipe: false, embedded: false },
-        { glob: "git status", pipe: false, embedded: false },
+        { glob: "echo *", pipe: false, embedded: false, redirect: "none" },
+        { glob: "git status", pipe: false, embedded: false, redirect: "none" },
       ]);
       const result = validateCommand("echo $(git status)", policy);
       expect(result.allowed).toBe(false);
       expect(result.reason).toContain("embedded: true");
+    });
+  });
+
+  describe("redirect flag enforcement", () => {
+    it("allows overwrite redirect when entry has redirect: overwrite", () => {
+      const policy = buildPolicy([
+        { glob: "echo *", pipe: false, embedded: false, redirect: "overwrite" },
+      ]);
+      expect(validateCommand("echo hello > file.txt", policy).allowed).toBe(true);
+    });
+
+    it("allows append redirect when entry has redirect: append", () => {
+      const policy = buildPolicy([
+        { glob: "echo *", pipe: false, embedded: false, redirect: "append" },
+      ]);
+      expect(validateCommand("echo hello >> file.txt", policy).allowed).toBe(true);
+    });
+
+    it("allows both redirect types when entry has redirect: both", () => {
+      const policy = buildPolicy([
+        { glob: "echo *", pipe: false, embedded: false, redirect: "both" },
+      ]);
+      expect(validateCommand("echo hello > file.txt", policy).allowed).toBe(true);
+      expect(validateCommand("echo hello >> file.txt", policy).allowed).toBe(true);
+    });
+
+    it("denies overwrite redirect when entry has redirect: none", () => {
+      const policy = buildPolicy([
+        { glob: "echo *", pipe: false, embedded: false, redirect: "none" },
+      ]);
+      const result = validateCommand("echo hello > file.txt", policy);
+      expect(result.allowed).toBe(false);
+      expect(result.reason).toContain("redirect");
+    });
+
+    it("denies append redirect when entry has redirect: none", () => {
+      const policy = buildPolicy([
+        { glob: "echo *", pipe: false, embedded: false, redirect: "none" },
+      ]);
+      const result = validateCommand("echo hello >> file.txt", policy);
+      expect(result.allowed).toBe(false);
+      expect(result.reason).toContain("redirect");
+    });
+
+    it("denies overwrite redirect when entry only has redirect: append", () => {
+      const policy = buildPolicy([
+        { glob: "echo *", pipe: false, embedded: false, redirect: "append" },
+      ]);
+      const result = validateCommand("echo hello > file.txt", policy);
+      expect(result.allowed).toBe(false);
+    });
+
+    it("allows command without redirect even when entry has redirect: both", () => {
+      const policy = buildPolicy([
+        { glob: "echo *", pipe: false, embedded: false, redirect: "both" },
+      ]);
+      expect(validateCommand("echo hello", policy).allowed).toBe(true);
     });
   });
 });

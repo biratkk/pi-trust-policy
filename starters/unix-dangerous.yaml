@@ -1,0 +1,10 @@
+name: unix-dangerous
+description: Destructive Unix utilities — commands that cause irrecoverable data loss
+
+includes:
+  - rm-destructive
+  - shred-destructive
+  - truncate-destructive
+  - mv-destructive
+
+commands: []

@@ -1,0 +1,8 @@
+name: sort-write
+description: sort with in-place output — classified as write since -o overwrites a file
+
+commands:
+  - glob: "sort -o {*,*/**}"
+    description: "Sort and write output to file"
+    pipe: false
+    embedded: false

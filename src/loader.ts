@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { TrustPolicyGroup, PolicyManifest, ResolvedPolicy, CommandEntry } from "./types";
@@ -63,7 +63,7 @@ export function listAllGroups(cwd: string): DiscoveredGroup[] {
 
 function findGroup(name: string, ctx: ResolutionContext): TrustPolicyGroup | null {
   if (ctx.cache.has(name)) return ctx.cache.get(name)!;
-  const group = loadGroupFromDir(ctx.localDir, name) ?? loadGroupFromDir(GLOBAL_POLICY_DIR, name) ?? loadGroupFromDir(STARTERS_DIR, name);
+  const group = loadGroupFromDir(ctx.localDir, name) ?? loadGroupFromDir(GLOBAL_POLICY_DIR, name) ?? loadGroupFromDir(STARTERS_DIR, name) ?? loadGroupFromStarters(name);
   ctx.cache.set(name, group);
   return group;
 }
@@ -111,6 +111,22 @@ function loadGroupFromDir(dir: string, name: string): TrustPolicyGroup | null {
   } catch { return null; }
 }
 
+function loadGroupFromStarters(name: string): TrustPolicyGroup | null {
+  if (!existsSync(STARTERS_DIR)) return null;
+  for (const entry of readdirSync(STARTERS_DIR)) {
+    const subdir = join(STARTERS_DIR, entry);
+    if (!statSync(subdir).isDirectory()) continue;
+    const group = loadGroupFromDir(subdir, name);
+    if (group) return group;
+  }
+  return null;
+}
+
+function parseRedirectMode(value: unknown): "none" | "append" | "overwrite" | "both" {
+  if (value === "append" || value === "overwrite" || value === "both") return value;
+  return "none";
+}
+
 function normalizeGroup(raw: Record<string, unknown>): TrustPolicyGroup {
   const rawCmds = raw.commands as Array<Record<string, unknown>> | undefined;
   const commands: CommandEntry[] = [];
@@ -122,6 +138,7 @@ function normalizeGroup(raw: Record<string, unknown>): TrustPolicyGroup {
           description: typeof cmd.description === "string" ? cmd.description : undefined,
           pipe: cmd.pipe === true,
           embedded: cmd.embedded === true,
+          redirect: parseRedirectMode(cmd.redirect),
         });
       }
     }

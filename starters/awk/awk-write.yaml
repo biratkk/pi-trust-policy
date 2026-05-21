@@ -1,0 +1,9 @@
+name: awk-write
+description: awk pattern scanning and processing — classified as write since it can generate transformed output
+
+commands:
+  - glob: "awk {*,*/**}"
+    description: "Pattern scanning and processing"
+    pipe: true
+    embedded: true
+    redirect: append

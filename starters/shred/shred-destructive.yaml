@@ -1,0 +1,8 @@
+name: shred-destructive
+description: shred — securely overwrites files making recovery impossible
+
+commands:
+  - glob: "shred {*,*/**}"
+    description: "Securely overwrite and optionally delete files"
+    pipe: false
+    embedded: false

@@ -1,0 +1,12 @@
+name: wc-read
+description: Read-only wc for counting lines, words, and bytes
+
+commands:
+  - glob: "wc {*,*/**}"
+    description: "Count lines, words, bytes"
+    pipe: true
+    embedded: true
+  - glob: "wc"
+    description: "Count from stdin"
+    pipe: true
+    embedded: true
