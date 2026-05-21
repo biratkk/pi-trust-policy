@@ -29,6 +29,21 @@ describe("validateCommand", () => {
       expect(validateCommand("git status", POLICY).allowed).toBe(true);
     });
 
+    it("allows 'cat file.txt' with glob 'cat *'", () => {
+      const policy = buildPolicy([{ glob: "cat *", pipe: true, embedded: false }]);
+      expect(validateCommand("cat file.txt", policy).allowed).toBe(true);
+    });
+
+    it("denies 'cat /file/path' with glob 'cat *' because * does not match /", () => {
+      const policy = buildPolicy([{ glob: "cat *", pipe: true, embedded: false }]);
+      expect(validateCommand("cat /file/path", policy).allowed).toBe(false);
+    });
+
+    it("allows 'cat /file/path' with glob 'cat */**'", () => {
+      const policy = buildPolicy([{ glob: "cat */**", pipe: true, embedded: false }]);
+      expect(validateCommand("cat /file/path", policy).allowed).toBe(true);
+    });
+
     it("allows pipeline when all segments have pipe: true", () => {
       expect(validateCommand("git log --oneline | grep feat", POLICY).allowed).toBe(true);
     });
