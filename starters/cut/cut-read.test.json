@@ -1,0 +1,9 @@
+{
+  "policy": "cut-read",
+  "cases": [
+    { "command": "cut -d: -f1 /etc/passwd", "allowed": true, "label": "cut with delimiter and absolute path" },
+    { "command": "cut -f2 ./data.tsv", "allowed": true, "label": "cut field with relative path" },
+    { "command": "cut -c1-10 file.txt", "allowed": true, "label": "character range" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+  ]
+}

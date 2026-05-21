@@ -1,0 +1,16 @@
+{
+  "policy": "unix-dangerous",
+  "cases": [
+    { "command": "rm file.txt", "allowed": true, "label": "basic rm" },
+    { "command": "rm -rf /tmp/build", "allowed": true, "label": "rm force recursive" },
+    { "command": "shred secret.key", "allowed": true, "label": "shred file" },
+    { "command": "shred -u /tmp/sensitive.dat", "allowed": true, "label": "shred and remove" },
+    { "command": "truncate -s 0 /var/log/app.log", "allowed": true, "label": "truncate to zero" },
+    { "command": "mv /tmp/old.txt /tmp/new.txt", "allowed": true, "label": "mv rename" },
+    { "command": "mv ./src/a.ts ./src/b.ts", "allowed": true, "label": "mv with relative paths" },
+    { "command": "grep pattern file.txt", "allowed": false, "label": "grep is read, not dangerous" },
+    { "command": "sed 's/foo/bar/' file.txt", "allowed": false, "label": "sed is write, not dangerous" },
+    { "command": "cp file.txt backup.txt", "allowed": false, "label": "cp is write, not dangerous" },
+    { "command": "cat /etc/hosts", "allowed": false, "label": "cat is read, not dangerous" }
+  ]
+}

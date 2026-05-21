@@ -1,0 +1,9 @@
+{
+  "policy": "truncate-destructive",
+  "cases": [
+    { "command": "truncate -s 0 file.log", "allowed": true, "label": "truncate to zero" },
+    { "command": "truncate -s 0 /var/log/app.log", "allowed": true, "label": "truncate with absolute path" },
+    { "command": "truncate --size 1M ./data.bin", "allowed": true, "label": "truncate to size with relative path" },
+    { "command": "rm file.txt", "allowed": false, "label": "rm not in truncate policy" }
+  ]
+}

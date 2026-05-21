@@ -1,0 +1,12 @@
+{
+  "policy": "cat-read",
+  "cases": [
+    { "command": "cat file.txt", "allowed": true, "label": "basic cat" },
+    { "command": "cat /etc/hosts", "allowed": true, "label": "absolute path" },
+    { "command": "cat ./src/index.ts", "allowed": true, "label": "relative path" },
+    { "command": "cat -n /var/log/syslog", "allowed": true, "label": "with line numbers flag" },
+    { "command": "cat file1.txt file2.txt", "allowed": true, "label": "multiple files" },
+    { "command": "cat file.txt > out.txt", "allowed": false, "label": "cat with overwrite redirect" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+  ]
+}

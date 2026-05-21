@@ -1,0 +1,19 @@
+{
+  "policy": "unix-write",
+  "cases": [
+    { "command": "sed 's/foo/bar/' /src/file.ts", "allowed": true, "label": "sed substitution" },
+    { "command": "awk '{print $1}' /tmp/data.csv", "allowed": true, "label": "awk with path" },
+    { "command": "tee /tmp/out.txt", "allowed": true, "label": "tee standalone" },
+    { "command": "tee -a /var/log/app.log", "allowed": true, "label": "tee append" },
+    { "command": "cp file.txt /tmp/backup.txt", "allowed": true, "label": "cp with paths" },
+    { "command": "cp -r /src /tmp/src-backup", "allowed": true, "label": "cp recursive" },
+    { "command": "curl -o /tmp/file.json https://api.example.com", "allowed": true, "label": "curl -o" },
+    { "command": "curl --output ./data.bin https://example.com", "allowed": true, "label": "curl --output" },
+    { "command": "sort -o /tmp/sorted.txt /tmp/input.txt", "allowed": true, "label": "sort -o" },
+    { "command": "sed 's/a/b/' file >> log.txt", "allowed": true, "label": "sed with append redirect" },
+    { "command": "rm file.txt", "allowed": false, "label": "rm is destructive, not write" },
+    { "command": "mv a.txt b.txt", "allowed": false, "label": "mv is destructive" },
+    { "command": "grep pattern file.txt", "allowed": false, "label": "grep is read, not write" },
+    { "command": "cat /etc/hosts", "allowed": false, "label": "cat is read, not write" }
+  ]
+}

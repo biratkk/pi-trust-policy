@@ -1,0 +1,9 @@
+{
+  "policy": "find-read",
+  "cases": [
+    { "command": "find . -name '*.ts'", "allowed": true, "label": "find by name" },
+    { "command": "find /usr/local -type f", "allowed": true, "label": "absolute path with type" },
+    { "command": "find ./src -name '*.test.ts' -type f", "allowed": true, "label": "relative path with multiple flags" },
+    { "command": "rm -rf /", "allowed": false, "label": "unrelated destructive command" }
+  ]
+}

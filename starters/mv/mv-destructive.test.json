@@ -1,0 +1,10 @@
+{
+  "policy": "mv-destructive",
+  "cases": [
+    { "command": "mv file.txt newname.txt", "allowed": true, "label": "basic rename" },
+    { "command": "mv /tmp/old.log /tmp/archive/old.log", "allowed": true, "label": "move with absolute paths" },
+    { "command": "mv ./src/old.ts ./src/new.ts", "allowed": true, "label": "move with relative paths" },
+    { "command": "cp file.txt backup.txt", "allowed": false, "label": "cp not in mv policy" },
+    { "command": "rm file.txt", "allowed": false, "label": "rm not in mv policy" }
+  ]
+}

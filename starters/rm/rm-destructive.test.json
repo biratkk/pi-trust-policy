@@ -1,0 +1,12 @@
+{
+  "policy": "rm-destructive",
+  "cases": [
+    { "command": "rm file.txt", "allowed": true, "label": "basic rm" },
+    { "command": "rm /tmp/junk.log", "allowed": true, "label": "absolute path" },
+    { "command": "rm -r ./build", "allowed": true, "label": "recursive with relative path" },
+    { "command": "rm -rf /tmp/cache", "allowed": true, "label": "force recursive with absolute path" },
+    { "command": "rm -f ./stale.lock", "allowed": true, "label": "force with relative path" },
+    { "command": "cp file.txt backup.txt", "allowed": false, "label": "cp not in rm policy" },
+    { "command": "ls /tmp", "allowed": false, "label": "unrelated command" }
+  ]
+}

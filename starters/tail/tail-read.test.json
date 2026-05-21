@@ -1,0 +1,10 @@
+{
+  "policy": "tail-read",
+  "cases": [
+    { "command": "tail file.txt", "allowed": true, "label": "basic tail" },
+    { "command": "tail -n 50 /var/log/syslog", "allowed": true, "label": "with line count and absolute path" },
+    { "command": "tail -f ./app.log", "allowed": true, "label": "follow mode with relative path" },
+    { "command": "tail", "allowed": true, "label": "tail from stdin (bare)" },
+    { "command": "head file.txt", "allowed": false, "label": "head not in tail policy" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "policy": "grep-read",
+  "cases": [
+    { "command": "grep pattern file.txt", "allowed": true, "label": "basic grep" },
+    { "command": "grep -r pattern /src/utils/", "allowed": true, "label": "recursive with absolute path" },
+    { "command": "grep -i 'hello' ./README.md", "allowed": true, "label": "case-insensitive with relative path" },
+    { "command": "grep -l pattern *.ts", "allowed": true, "label": "list matching files" },
+    { "command": "grep -c pattern file.txt", "allowed": true, "label": "count matches" },
+    { "command": "grep -E '^import' file.ts", "allowed": true, "label": "extended regex" },
+    { "command": "grep foo file | grep bar", "allowed": true, "label": "grep piped to grep" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" },
+    { "command": "sed s/foo/bar/ file.txt", "allowed": false, "label": "sed not in grep policy" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "policy": "shred-destructive",
+  "cases": [
+    { "command": "shred secret.key", "allowed": true, "label": "basic shred" },
+    { "command": "shred -u /tmp/sensitive.dat", "allowed": true, "label": "shred and delete with absolute path" },
+    { "command": "shred -n 5 ./credentials.txt", "allowed": true, "label": "multiple passes with relative path" },
+    { "command": "rm file.txt", "allowed": false, "label": "rm not in shred policy" }
+  ]
+}

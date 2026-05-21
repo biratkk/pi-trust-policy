@@ -1,0 +1,11 @@
+{
+  "policy": "ls-read",
+  "cases": [
+    { "command": "ls", "allowed": true, "label": "bare ls" },
+    { "command": "ls -la", "allowed": true, "label": "long format with hidden" },
+    { "command": "ls /usr/local/bin", "allowed": true, "label": "absolute path" },
+    { "command": "ls ./src/", "allowed": true, "label": "relative path" },
+    { "command": "ls -R /tmp/", "allowed": true, "label": "recursive listing" },
+    { "command": "rm -rf /", "allowed": false, "label": "unrelated destructive command" }
+  ]
+}

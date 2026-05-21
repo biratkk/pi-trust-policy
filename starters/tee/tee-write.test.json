@@ -1,0 +1,10 @@
+{
+  "policy": "tee-write",
+  "cases": [
+    { "command": "tee file.txt", "allowed": true, "label": "basic tee" },
+    { "command": "tee /tmp/out.txt", "allowed": true, "label": "tee with absolute path" },
+    { "command": "tee -a ./log.txt", "allowed": true, "label": "tee append mode with relative path" },
+    { "command": "tee -a /var/log/app.log", "allowed": true, "label": "tee append with absolute path" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+  ]
+}

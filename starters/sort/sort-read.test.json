@@ -1,0 +1,10 @@
+{
+  "policy": "sort-read",
+  "cases": [
+    { "command": "sort file.txt", "allowed": true, "label": "basic sort" },
+    { "command": "sort -n /tmp/numbers.txt", "allowed": true, "label": "numeric sort with absolute path" },
+    { "command": "sort -r ./data.csv", "allowed": true, "label": "reverse sort with relative path" },
+    { "command": "sort", "allowed": true, "label": "sort from stdin (bare)" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+  ]
+}

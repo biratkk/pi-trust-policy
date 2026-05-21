@@ -1,0 +1,20 @@
+{
+  "policy": "unix-read",
+  "cases": [
+    { "command": "grep -r TODO /src/", "allowed": true, "label": "grep with path" },
+    { "command": "cat /etc/hosts", "allowed": true, "label": "cat with absolute path" },
+    { "command": "ls -la ./src", "allowed": true, "label": "ls with flags" },
+    { "command": "head -n 5 /tmp/file.txt", "allowed": true, "label": "head with path" },
+    { "command": "tail -f /var/log/app.log", "allowed": true, "label": "tail follow" },
+    { "command": "wc -l /src/index.ts", "allowed": true, "label": "wc with path" },
+    { "command": "find . -name '*.ts'", "allowed": true, "label": "find by name" },
+    { "command": "cut -d: -f1 /etc/passwd", "allowed": true, "label": "cut with path" },
+    { "command": "sort /tmp/data.txt", "allowed": true, "label": "sort with path" },
+    { "command": "grep pattern file | wc -l", "allowed": true, "label": "pipeline across read tools" },
+    { "command": "find . -name '*.log' | head -5", "allowed": true, "label": "find piped to head" },
+    { "command": "sed 's/foo/bar/' file.txt", "allowed": false, "label": "sed is write, not read" },
+    { "command": "rm file.txt", "allowed": false, "label": "rm is destructive" },
+    { "command": "echo hello > file.txt", "allowed": false, "label": "redirect not allowed in read" },
+    { "command": "mv a.txt b.txt", "allowed": false, "label": "mv is destructive" }
+  ]
+}

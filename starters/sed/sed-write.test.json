@@ -1,0 +1,11 @@
+{
+  "policy": "sed-write",
+  "cases": [
+    { "command": "sed 's/foo/bar/' file.txt", "allowed": true, "label": "basic substitution" },
+    { "command": "sed -n '1,10p' /var/log/syslog", "allowed": true, "label": "print range with absolute path" },
+    { "command": "sed -i 's/old/new/g' ./config.yml", "allowed": true, "label": "in-place edit with relative path" },
+    { "command": "sed 's/x/y/' file >> log.txt", "allowed": true, "label": "sed with append redirect" },
+    { "command": "sed 's/x/y/' file > out.txt", "allowed": false, "label": "sed with overwrite redirect denied" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+  ]
+}

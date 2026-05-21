@@ -1,0 +1,11 @@
+{
+  "policy": "cp-write",
+  "cases": [
+    { "command": "cp file.txt backup.txt", "allowed": true, "label": "basic copy" },
+    { "command": "cp /src/config.yml /tmp/config.yml", "allowed": true, "label": "absolute paths" },
+    { "command": "cp -r ./src ./src-backup", "allowed": true, "label": "recursive copy with relative paths" },
+    { "command": "cp -r /var/data /tmp/data-copy", "allowed": true, "label": "recursive with absolute paths" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" },
+    { "command": "mv file.txt other.txt", "allowed": false, "label": "mv not in cp policy" }
+  ]
+}

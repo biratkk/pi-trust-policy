@@ -1,0 +1,10 @@
+{
+  "policy": "head-read",
+  "cases": [
+    { "command": "head file.txt", "allowed": true, "label": "basic head" },
+    { "command": "head -n 20 /var/log/syslog", "allowed": true, "label": "with line count and absolute path" },
+    { "command": "head ./src/index.ts", "allowed": true, "label": "relative path" },
+    { "command": "head", "allowed": true, "label": "head from stdin (bare)" },
+    { "command": "tail file.txt", "allowed": false, "label": "tail not in head policy" }
+  ]
+}

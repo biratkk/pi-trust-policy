@@ -11,3 +11,4 @@
 ## Workflow
 
 - **One commit per change.** Verify with `tsc --noEmit` and `vitest run` before every commit.
+- **Every starter policy has a colocated `.test.json`.** Both per-tool (`grep/grep-read.test.json`) and aggregate (`unix-read.test.json`) policies must have test cases. The test runner at `tests/starters.test.ts` auto-discovers them.

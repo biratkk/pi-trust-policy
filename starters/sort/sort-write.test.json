@@ -1,0 +1,10 @@
+{
+  "policy": "sort-write",
+  "cases": [
+    { "command": "sort -o output.txt input.txt", "allowed": true, "label": "sort -o basic" },
+    { "command": "sort -o /tmp/sorted.txt /tmp/unsorted.txt", "allowed": true, "label": "sort -o with absolute paths" },
+    { "command": "sort -o ./sorted.csv ./data.csv", "allowed": true, "label": "sort -o with relative paths" },
+    { "command": "sort file.txt", "allowed": false, "label": "sort without -o is read, not write" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+  ]
+}
