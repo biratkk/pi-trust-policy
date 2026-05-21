@@ -6,6 +6,10 @@
     { "command": "ls /usr/local/bin", "allowed": true, "label": "absolute path" },
     { "command": "ls ./src/", "allowed": true, "label": "relative path" },
     { "command": "ls -R /tmp/", "allowed": true, "label": "recursive listing" },
+    { "command": "ls /home/user/.config/", "allowed": true, "label": "dotdir in path" },
+    { "command": "ls -la /a/b/c/d/", "allowed": true, "label": "deep nested path" },
+    { "command": "ls > files.txt", "allowed": false, "label": "ls with overwrite redirect" },
+    { "command": "ls >> files.txt", "allowed": false, "label": "ls with append redirect" },
     { "command": "rm -rf /", "allowed": false, "label": "unrelated destructive command" }
   ]
 }

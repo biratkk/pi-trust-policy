@@ -5,6 +5,8 @@
     { "command": "sort -n /tmp/numbers.txt", "allowed": true, "label": "numeric sort with absolute path" },
     { "command": "sort -r ./data.csv", "allowed": true, "label": "reverse sort with relative path" },
     { "command": "sort", "allowed": true, "label": "sort from stdin (bare)" },
+    { "command": "sort -k2 /a/b/c/data.tsv", "allowed": true, "label": "sort by key with deep path" },
+    { "command": "sort file.txt > sorted.txt", "allowed": false, "label": "sort with overwrite redirect" },
     { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
   ]
 }

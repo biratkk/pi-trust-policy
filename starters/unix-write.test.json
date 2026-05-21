@@ -11,9 +11,14 @@
     { "command": "curl --output ./data.bin https://example.com", "allowed": true, "label": "curl --output" },
     { "command": "sort -o /tmp/sorted.txt /tmp/input.txt", "allowed": true, "label": "sort -o" },
     { "command": "sed 's/a/b/' file >> log.txt", "allowed": true, "label": "sed with append redirect" },
+    { "command": "sed 's/a/b/' file | awk '{print $1}'", "allowed": true, "label": "pipeline: sed to awk" },
+    { "command": "cp /src/a.txt /tmp/a.txt && cp /src/b.txt /tmp/b.txt", "allowed": true, "label": "chained cp" },
+    { "command": "sed 's/a/b/' file > out.txt", "allowed": false, "label": "overwrite redirect denied" },
+    { "command": "awk '{print}' file > out.txt", "allowed": false, "label": "awk overwrite redirect denied" },
     { "command": "rm file.txt", "allowed": false, "label": "rm is destructive, not write" },
     { "command": "mv a.txt b.txt", "allowed": false, "label": "mv is destructive" },
     { "command": "grep pattern file.txt", "allowed": false, "label": "grep is read, not write" },
-    { "command": "cat /etc/hosts", "allowed": false, "label": "cat is read, not write" }
+    { "command": "cat /etc/hosts", "allowed": false, "label": "cat is read, not write" },
+    { "command": "curl https://example.com", "allowed": false, "label": "curl without -o not covered" }
   ]
 }

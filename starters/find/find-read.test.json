@@ -4,6 +4,9 @@
     { "command": "find . -name '*.ts'", "allowed": true, "label": "find by name" },
     { "command": "find /usr/local -type f", "allowed": true, "label": "absolute path with type" },
     { "command": "find ./src -name '*.test.ts' -type f", "allowed": true, "label": "relative path with multiple flags" },
+    { "command": "find /home/user/.config -name '*.yml'", "allowed": true, "label": "dotdir in path" },
+    { "command": "find / -maxdepth 3 -name '*.log'", "allowed": true, "label": "root with depth limit" },
+    { "command": "find . -name '*.tmp' > list.txt", "allowed": false, "label": "find with overwrite redirect" },
     { "command": "rm -rf /", "allowed": false, "label": "unrelated destructive command" }
   ]
 }

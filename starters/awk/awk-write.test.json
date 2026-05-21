@@ -4,8 +4,10 @@
     { "command": "awk '{print $1}' file.txt", "allowed": true, "label": "basic awk" },
     { "command": "awk -F: '{print $1}' /etc/passwd", "allowed": true, "label": "with field separator and absolute path" },
     { "command": "awk '/pattern/ {print}' ./data.csv", "allowed": true, "label": "pattern match with relative path" },
+    { "command": "awk 'NR>1 {print $2}' /home/user/.config/data.tsv", "allowed": true, "label": "skip header with dotpath" },
     { "command": "awk '{print}' file >> log.txt", "allowed": true, "label": "awk with append redirect" },
     { "command": "awk '{print}' file > out.txt", "allowed": false, "label": "awk with overwrite redirect denied" },
-    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" },
+    { "command": "sed 's/a/b/' file", "allowed": false, "label": "sed not in awk policy" }
   ]
 }

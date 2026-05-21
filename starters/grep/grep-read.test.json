@@ -7,7 +7,11 @@
     { "command": "grep -l pattern *.ts", "allowed": true, "label": "list matching files" },
     { "command": "grep -c pattern file.txt", "allowed": true, "label": "count matches" },
     { "command": "grep -E '^import' file.ts", "allowed": true, "label": "extended regex" },
+    { "command": "grep -rn TODO /home/user/.config/app/settings.yml", "allowed": true, "label": "deep nested path with dotfile" },
+    { "command": "grep pattern .hidden-file", "allowed": true, "label": "dotfile in current dir" },
     { "command": "grep foo file | grep bar", "allowed": true, "label": "grep piped to grep" },
+    { "command": "grep pattern file.txt > out.txt", "allowed": false, "label": "grep with overwrite redirect" },
+    { "command": "grep pattern file.txt >> log.txt", "allowed": false, "label": "grep with append redirect" },
     { "command": "rm file.txt", "allowed": false, "label": "unrelated command" },
     { "command": "sed s/foo/bar/ file.txt", "allowed": false, "label": "sed not in grep policy" }
   ]

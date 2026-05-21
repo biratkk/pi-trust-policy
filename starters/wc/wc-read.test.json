@@ -5,6 +5,8 @@
     { "command": "wc -l /src/index.ts", "allowed": true, "label": "line count with absolute path" },
     { "command": "wc -w ./README.md", "allowed": true, "label": "word count with relative path" },
     { "command": "wc", "allowed": true, "label": "wc from stdin (bare)" },
+    { "command": "wc -c /a/b/c/deep.txt", "allowed": true, "label": "byte count deep path" },
+    { "command": "wc file.txt > count.txt", "allowed": false, "label": "wc with overwrite redirect" },
     { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
   ]
 }

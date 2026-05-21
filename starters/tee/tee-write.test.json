@@ -5,6 +5,8 @@
     { "command": "tee /tmp/out.txt", "allowed": true, "label": "tee with absolute path" },
     { "command": "tee -a ./log.txt", "allowed": true, "label": "tee append mode with relative path" },
     { "command": "tee -a /var/log/app.log", "allowed": true, "label": "tee append with absolute path" },
-    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+    { "command": "tee /home/user/.local/share/data.txt", "allowed": true, "label": "deep dotpath" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" },
+    { "command": "cat file.txt", "allowed": false, "label": "cat not in tee policy" }
   ]
 }

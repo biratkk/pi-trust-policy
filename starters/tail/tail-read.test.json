@@ -5,6 +5,8 @@
     { "command": "tail -n 50 /var/log/syslog", "allowed": true, "label": "with line count and absolute path" },
     { "command": "tail -f ./app.log", "allowed": true, "label": "follow mode with relative path" },
     { "command": "tail", "allowed": true, "label": "tail from stdin (bare)" },
+    { "command": "tail -100 /a/b/c/deep.log", "allowed": true, "label": "deep path" },
+    { "command": "tail file.txt > out.txt", "allowed": false, "label": "tail with overwrite redirect" },
     { "command": "head file.txt", "allowed": false, "label": "head not in tail policy" }
   ]
 }

@@ -5,6 +5,8 @@
     { "command": "head -n 20 /var/log/syslog", "allowed": true, "label": "with line count and absolute path" },
     { "command": "head ./src/index.ts", "allowed": true, "label": "relative path" },
     { "command": "head", "allowed": true, "label": "head from stdin (bare)" },
+    { "command": "head -100 /a/b/c/deep.log", "allowed": true, "label": "deep path" },
+    { "command": "head file.txt > out.txt", "allowed": false, "label": "head with overwrite redirect" },
     { "command": "tail file.txt", "allowed": false, "label": "tail not in head policy" }
   ]
 }

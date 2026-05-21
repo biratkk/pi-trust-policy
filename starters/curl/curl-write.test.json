@@ -5,6 +5,7 @@
     { "command": "curl -o /tmp/download.tar.gz https://example.com/file", "allowed": true, "label": "curl -o with absolute path" },
     { "command": "curl --output ./data.json https://api.example.com", "allowed": true, "label": "curl --output with relative path" },
     { "command": "curl --output /tmp/out.bin https://example.com/bin", "allowed": true, "label": "curl --output with absolute path" },
+    { "command": "curl -o /home/user/.cache/pkg.tar https://registry.example.com/pkg", "allowed": true, "label": "deep dotpath" },
     { "command": "curl https://example.com", "allowed": false, "label": "curl without -o not in write policy" },
     { "command": "wget https://example.com", "allowed": false, "label": "unrelated command" }
   ]
