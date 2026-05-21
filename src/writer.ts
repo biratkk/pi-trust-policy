@@ -27,7 +27,7 @@ export function addCommandToGroup(groupName: string, command: CommandEntry, dir:
   }
 }
 
-export function formatGroupAsYaml(group: TrustPolicyGroup): string {
+function formatGroupAsYaml(group: TrustPolicyGroup): string {
   const doc: Record<string, unknown> = { name: group.name, description: group.description };
   if (group.includes?.length) doc.includes = group.includes;
   doc.commands = group.commands.map(serializeCommand);

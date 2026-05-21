@@ -6,7 +6,7 @@ import { GLOBAL_POLICY_DIR, getLocalPolicyDir } from "./paths.js";
 import { resolvePolicy, listStarters, listAllGroups } from "./loader.js";
 import { validateCommand, isValidGlob, generateGlobExamples } from "./validator.js";
 import { addCommandToGroup, setGroupActive, copyStarter, readManifest } from "./writer.js";
-import { runCreationWizard } from "./wizard.js";
+
 
 interface State {
   policy: ResolvedPolicy | null;
@@ -41,13 +41,7 @@ export default function trustPolicyExtension(pi: ExtensionAPI): void {
     },
   });
 
-  pi.registerCommand("trust-policy:create", {
-    description: "Create a new trust policy group through an interactive session",
-    handler: async (_args, ctx) => {
-      await runCreationWizard(state.cwd, ctx);
-      state.policy = loadAndDisplay(state.cwd, ctx);
-    },
-  });
+
 }
 
 function loadAndDisplay(cwd: string, ctx: ExtensionContext): ResolvedPolicy {

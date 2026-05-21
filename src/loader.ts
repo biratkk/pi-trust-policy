@@ -33,10 +33,6 @@ export function resolvePolicy(cwd: string): ResolvedPolicy {
   return { commands: allCommands, groups, warnings: ctx.warnings };
 }
 
-export function loadStarterGroup(name: string): TrustPolicyGroup | null {
-  return loadGroupFromDir(STARTERS_DIR, name);
-}
-
 export function listStarters(): string[] {
   if (!existsSync(STARTERS_DIR)) return [];
   return readdirSync(STARTERS_DIR).filter((f) => f.endsWith(".yaml")).map((f) => f.replace(/\.yaml$/, ""));
