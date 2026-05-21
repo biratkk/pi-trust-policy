@@ -71,7 +71,7 @@ async function openPolicyManager(cwd: string, ctx: ExtensionContext): Promise<vo
       label: name,
       description,
       currentValue,
-      values: ["inactive", "global", "local", "global & local"],
+      values: ["inactive", "local", "global", "global & local"],
     };
   });
 
