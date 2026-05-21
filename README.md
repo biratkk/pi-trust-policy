@@ -40,6 +40,8 @@ commands:
 
 Run `/trust-policy` in pi to open the TUI manager and toggle policies on/off.
 
+![Policy Manager TUI](assets/policy-manager-screenshot.png)
+
 Or manually create `~/.pi/agent/trust-policy/policy.json`:
 
 ```json
