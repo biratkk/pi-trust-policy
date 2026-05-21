@@ -8,6 +8,7 @@ export interface DiscoveredGroup {
   name: string;
   source: "local" | "global" | "starter";
   description: string;
+  isAggregate: boolean;
 }
 
 interface ResolutionContext {
@@ -52,7 +53,8 @@ export function listAllGroups(cwd: string): DiscoveredGroup[] {
       if (seen.has(name)) continue;
       seen.add(name);
       const group = loadGroupFromDir(fileDir, name);
-      groups.push({ name, source, description: group?.description ?? "" });
+      const isAggregate = (group?.includes?.length ?? 0) > 0;
+      groups.push({ name, source, description: group?.description ?? "", isAggregate });
     }
   }
 

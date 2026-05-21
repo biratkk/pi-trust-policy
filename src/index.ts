@@ -62,7 +62,7 @@ async function openPolicyManager(cwd: string, ctx: ExtensionContext): Promise<vo
   const localDir = getLocalPolicyDir(cwd);
   const globalManifest = readManifest(GLOBAL_POLICY_DIR);
   const localManifest = readManifest(localDir);
-  const allGroups = listAllGroups(cwd).sort((a, b) => a.name.localeCompare(b.name));
+  const allGroups = listAllGroups(cwd).filter((g) => g.isAggregate).sort((a, b) => a.name.localeCompare(b.name));
 
   const items: SettingItem[] = allGroups.map(({ name, description }) => {
     const inGlobal = globalManifest.active.includes(name);
