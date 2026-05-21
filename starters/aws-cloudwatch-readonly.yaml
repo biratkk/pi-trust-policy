@@ -1,0 +1,6 @@
+name: aws-cloudwatch-readonly
+description: aws cloudwatch - trust policy
+commands:
+  - glob: aws cloudwatch *
+    description: Cloudwatch commands
+    pipe: true
