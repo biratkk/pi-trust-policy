@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { TrustPolicyGroup, PolicyManifest, ResolvedPolicy, CommandEntry } from "./types";
-import { GLOBAL_POLICY_DIR, STARTERS_DIR, getLocalPolicyDir } from "./paths";
+import { GLOBAL_POLICY_DIR, POLICIES_DIR, getLocalPolicyDir } from "./paths";
 
 export interface DiscoveredGroup {
   name: string;
@@ -34,8 +34,8 @@ export function resolvePolicy(cwd: string): ResolvedPolicy {
 }
 
 export function listStarters(): string[] {
-  if (!existsSync(STARTERS_DIR)) return [];
-  return readdirSync(STARTERS_DIR).filter((f) => f.endsWith(".yaml")).map((f) => f.replace(/\.yaml$/, ""));
+  if (!existsSync(POLICIES_DIR)) return [];
+  return readdirSync(POLICIES_DIR).filter((f) => f.endsWith(".yaml")).map((f) => f.replace(/\.yaml$/, ""));
 }
 
 export function listAllGroups(cwd: string): DiscoveredGroup[] {
@@ -45,7 +45,7 @@ export function listAllGroups(cwd: string): DiscoveredGroup[] {
   for (const [dir, source] of [
     [getLocalPolicyDir(cwd), "local"],
     [GLOBAL_POLICY_DIR, "global"],
-    [STARTERS_DIR, "starter"],
+    [POLICIES_DIR, "starter"],
   ] as const) {
     if (!existsSync(dir)) continue;
     for (const file of readdirSync(dir)) {
@@ -63,7 +63,7 @@ export function listAllGroups(cwd: string): DiscoveredGroup[] {
 
 function findGroup(name: string, ctx: ResolutionContext): TrustPolicyGroup | null {
   if (ctx.cache.has(name)) return ctx.cache.get(name)!;
-  const group = loadGroupFromDir(ctx.localDir, name) ?? loadGroupFromDir(GLOBAL_POLICY_DIR, name) ?? loadGroupFromDir(STARTERS_DIR, name) ?? loadGroupFromStarters(name);
+  const group = loadGroupFromDir(ctx.localDir, name) ?? loadGroupFromDir(GLOBAL_POLICY_DIR, name) ?? loadGroupFromDir(POLICIES_DIR, name) ?? loadGroupFromPoliciesSubdirs(name);
   ctx.cache.set(name, group);
   return group;
 }
@@ -111,10 +111,10 @@ function loadGroupFromDir(dir: string, name: string): TrustPolicyGroup | null {
   } catch { return null; }
 }
 
-function loadGroupFromStarters(name: string): TrustPolicyGroup | null {
-  if (!existsSync(STARTERS_DIR)) return null;
-  for (const entry of readdirSync(STARTERS_DIR)) {
-    const subdir = join(STARTERS_DIR, entry);
+function loadGroupFromPoliciesSubdirs(name: string): TrustPolicyGroup | null {
+  if (!existsSync(POLICIES_DIR)) return null;
+  for (const entry of readdirSync(POLICIES_DIR)) {
+    const subdir = join(POLICIES_DIR, entry);
     if (!statSync(subdir).isDirectory()) continue;
     const group = loadGroupFromDir(subdir, name);
     if (group) return group;

@@ -6,6 +6,7 @@ import { GLOBAL_POLICY_DIR, getLocalPolicyDir } from "./paths";
 import { resolvePolicy, listStarters, listAllGroups } from "./loader";
 import { validateCommand, isValidGlob, generateGlobExamples } from "./validator";
 import { addCommandToGroup, setGroupActive, copyStarter, readManifest } from "./writer";
+import { migrateStarterPolicies } from "./migrate";
 
 
 interface State {
@@ -18,6 +19,7 @@ export default function trustPolicyExtension(pi: ExtensionAPI): void {
 
   pi.on("session_start", async (_event, ctx) => {
     state.cwd = ctx.cwd;
+    migrateStarterPolicies();
     state.policy = loadAndDisplay(state.cwd, ctx);
   });
 

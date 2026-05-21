@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from
 import { join } from "node:path";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 import type { TrustPolicyGroup, PolicyManifest, CommandEntry } from "./types";
-import { STARTERS_DIR } from "./paths";
+import { POLICIES_DIR } from "./paths";
 
 export function writeGroupFile(group: TrustPolicyGroup, dir: string): string {
   mkdirSync(dir, { recursive: true });
@@ -61,7 +61,7 @@ export function setGroupActive(groupName: string, dir: string, active: boolean):
 }
 
 export function copyStarter(starterName: string, targetDir: string): boolean {
-  const sourcePath = join(STARTERS_DIR, `${starterName}.yaml`);
+  const sourcePath = join(POLICIES_DIR, `${starterName}.yaml`);
   if (!existsSync(sourcePath)) return false;
   mkdirSync(targetDir, { recursive: true });
   copyFileSync(sourcePath, join(targetDir, `${starterName}.yaml`));
