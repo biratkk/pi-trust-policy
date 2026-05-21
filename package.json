@@ -1,11 +1,20 @@
 {
   "name": "pi-trust-policy",
   "version": "0.1.0",
-  "description": "Trust policy extension for pi - bash command allowlist groups",
+  "description": "Bash command allowlist system for pi — grouped trust policies with glob matching, recursive parsing, and an interactive TUI manager",
+  "keywords": ["pi-package", "trust-policy", "permissions", "bash", "allowlist", "security"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/biratkk/pi-trust-policy"
+  },
+  "author": "biratkk",
   "pi": {
-    "extensions": [
-      "./src/index.ts"
-    ]
+    "extensions": ["./src/index.ts"]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*"
   },
   "dependencies": {
     "minimatch": "^10.2.5",
