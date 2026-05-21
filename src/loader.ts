@@ -35,7 +35,7 @@ export function resolvePolicy(cwd: string): ResolvedPolicy {
 
 export function listStarters(): string[] {
   if (!existsSync(POLICIES_DIR)) return [];
-  return readdirSync(POLICIES_DIR).filter((f) => f.endsWith(".yaml")).map((f) => f.replace(/\.yaml$/, ""));
+  return collectYamlNames(POLICIES_DIR);
 }
 
 export function listAllGroups(cwd: string): DiscoveredGroup[] {
@@ -48,12 +48,10 @@ export function listAllGroups(cwd: string): DiscoveredGroup[] {
     [POLICIES_DIR, "starter"],
   ] as const) {
     if (!existsSync(dir)) continue;
-    for (const file of readdirSync(dir)) {
-      if (!file.endsWith(".yaml")) continue;
-      const name = file.replace(/\.yaml$/, "");
+    for (const { name, dir: fileDir } of collectYamlEntries(dir)) {
       if (seen.has(name)) continue;
       seen.add(name);
-      const group = loadGroupFromDir(dir, name);
+      const group = loadGroupFromDir(fileDir, name);
       groups.push({ name, source, description: group?.description ?? "" });
     }
   }
@@ -109,6 +107,24 @@ function loadGroupFromDir(dir: string, name: string): TrustPolicyGroup | null {
     const raw = parseYaml(readFileSync(path, "utf-8")) as Record<string, unknown>;
     return normalizeGroup(raw);
   } catch { return null; }
+}
+
+function collectYamlNames(dir: string): string[] {
+  return collectYamlEntries(dir).map((e) => e.name);
+}
+
+function collectYamlEntries(dir: string): Array<{ name: string; dir: string }> {
+  const entries: Array<{ name: string; dir: string }> = [];
+  if (!existsSync(dir)) return entries;
+  for (const item of readdirSync(dir)) {
+    const fullPath = join(dir, item);
+    if (statSync(fullPath).isDirectory()) {
+      entries.push(...collectYamlEntries(fullPath));
+    } else if (item.endsWith(".yaml")) {
+      entries.push({ name: item.replace(/\.yaml$/, ""), dir });
+    }
+  }
+  return entries;
 }
 
 function loadGroupFromPoliciesSubdirs(name: string): TrustPolicyGroup | null {
