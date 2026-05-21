@@ -1,91 +1,57 @@
-import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { parse as parseYaml } from "yaml";
-import type { TrustPolicyGroup, PolicyManifest, ResolvedPolicy, CommandEntry } from "./types";
+import type { PolicyManifest, ResolvedPolicy, CommandEntry } from "./types";
 import { GLOBAL_POLICY_DIR, POLICIES_DIR, getLocalPolicyDir } from "./paths";
+import { PolicyRegistry } from "./registry";
 
 export interface DiscoveredGroup {
   name: string;
-  source: "local" | "global" | "starter";
+  source: "local" | "global" | "policies";
   description: string;
   isAggregate: boolean;
 }
 
-interface ResolutionContext {
-  localDir: string;
-  cache: Map<string, TrustPolicyGroup | null>;
-  warnings: string[];
-}
-
 export function resolvePolicy(cwd: string): ResolvedPolicy {
   const localDir = getLocalPolicyDir(cwd);
-  const ctx: ResolutionContext = { localDir, cache: new Map(), warnings: [] };
+  const registry = buildRegistry(localDir);
   const activeNames = collectActiveNames(localDir);
   const groups = new Map<string, { description: string; commands: CommandEntry[] }>();
   const allCommands: CommandEntry[] = [];
+  const warnings: string[] = [];
 
   for (const name of activeNames) {
-    const commands = resolveGroup(name, new Set(), ctx);
+    const commands = registry.resolve(name, new Set(), warnings);
     allCommands.push(...commands);
-    const group = findGroup(name, ctx);
+    const group = registry.get(name);
     if (group) groups.set(name, { description: group.description, commands });
   }
 
-  return { commands: allCommands, groups, warnings: ctx.warnings };
+  return { commands: allCommands, groups, warnings };
 }
 
 export function listStarters(): string[] {
-  if (!existsSync(POLICIES_DIR)) return [];
-  return collectYamlNames(POLICIES_DIR);
+  const registry = buildRegistry("");
+  return registry.names();
 }
 
 export function listAllGroups(cwd: string): DiscoveredGroup[] {
-  const seen = new Set<string>();
-  const groups: DiscoveredGroup[] = [];
+  const localDir = getLocalPolicyDir(cwd);
+  const registry = buildRegistry(localDir);
 
-  for (const [dir, source] of [
-    [getLocalPolicyDir(cwd), "local"],
-    [GLOBAL_POLICY_DIR, "global"],
-    [POLICIES_DIR, "starter"],
-  ] as const) {
-    if (!existsSync(dir)) continue;
-    for (const { name, dir: fileDir } of collectYamlEntries(dir)) {
-      if (seen.has(name)) continue;
-      seen.add(name);
-      const group = loadGroupFromDir(fileDir, name);
-      const isAggregate = (group?.includes?.length ?? 0) > 0;
-      groups.push({ name, source, description: group?.description ?? "", isAggregate });
-    }
-  }
-
-  return groups;
+  return registry.all().map(({ group, source }) => ({
+    name: group.name,
+    source,
+    description: group.description,
+    isAggregate: (group.includes?.length ?? 0) > 0,
+  }));
 }
 
-function findGroup(name: string, ctx: ResolutionContext): TrustPolicyGroup | null {
-  if (ctx.cache.has(name)) return ctx.cache.get(name)!;
-  const group = loadGroupFromDir(ctx.localDir, name) ?? loadGroupFromDir(GLOBAL_POLICY_DIR, name) ?? loadGroupFromDir(POLICIES_DIR, name) ?? loadGroupFromPoliciesSubdirs(name);
-  ctx.cache.set(name, group);
-  return group;
-}
-
-function resolveGroup(name: string, visited: Set<string>, ctx: ResolutionContext): CommandEntry[] {
-  if (visited.has(name)) {
-    ctx.warnings.push(`Circular reference detected: '${name}' already in resolution chain`);
-    return [];
-  }
-  const group = findGroup(name, ctx);
-  if (!group) {
-    ctx.warnings.push(`Trust policy group '${name}' not found`);
-    return [];
-  }
-  visited.add(name);
-  const commands = [...group.commands];
-  if (group.includes) {
-    for (const inc of group.includes) {
-      commands.push(...resolveGroup(inc, new Set(visited), ctx));
-    }
-  }
-  return commands;
+function buildRegistry(localDir: string): PolicyRegistry {
+  const dirs: Array<{ path: string; source: "local" | "global" | "policies" }> = [];
+  if (localDir) dirs.push({ path: localDir, source: "local" });
+  dirs.push({ path: GLOBAL_POLICY_DIR, source: "global" });
+  dirs.push({ path: POLICIES_DIR, source: "policies" });
+  return new PolicyRegistry(dirs);
 }
 
 function collectActiveNames(localDir: string): Set<string> {
@@ -100,71 +66,4 @@ function loadManifest(dir: string): PolicyManifest | null {
   const path = join(dir, "policy.json");
   if (!existsSync(path)) return null;
   try { return JSON.parse(readFileSync(path, "utf-8")) as PolicyManifest; } catch { return null; }
-}
-
-function loadGroupFromDir(dir: string, name: string): TrustPolicyGroup | null {
-  const path = join(dir, `${name}.yaml`);
-  if (!existsSync(path)) return null;
-  try {
-    const raw = parseYaml(readFileSync(path, "utf-8")) as Record<string, unknown>;
-    return normalizeGroup(raw);
-  } catch { return null; }
-}
-
-function collectYamlNames(dir: string): string[] {
-  return collectYamlEntries(dir).map((e) => e.name);
-}
-
-function collectYamlEntries(dir: string): Array<{ name: string; dir: string }> {
-  const entries: Array<{ name: string; dir: string }> = [];
-  if (!existsSync(dir)) return entries;
-  for (const item of readdirSync(dir)) {
-    const fullPath = join(dir, item);
-    if (statSync(fullPath).isDirectory()) {
-      entries.push(...collectYamlEntries(fullPath));
-    } else if (item.endsWith(".yaml")) {
-      entries.push({ name: item.replace(/\.yaml$/, ""), dir });
-    }
-  }
-  return entries;
-}
-
-function loadGroupFromPoliciesSubdirs(name: string): TrustPolicyGroup | null {
-  if (!existsSync(POLICIES_DIR)) return null;
-  for (const entry of readdirSync(POLICIES_DIR)) {
-    const subdir = join(POLICIES_DIR, entry);
-    if (!statSync(subdir).isDirectory()) continue;
-    const group = loadGroupFromDir(subdir, name);
-    if (group) return group;
-  }
-  return null;
-}
-
-function parseRedirectMode(value: unknown): "none" | "append" | "overwrite" | "both" {
-  if (value === "append" || value === "overwrite" || value === "both") return value;
-  return "none";
-}
-
-function normalizeGroup(raw: Record<string, unknown>): TrustPolicyGroup {
-  const rawCmds = raw.commands as Array<Record<string, unknown>> | undefined;
-  const commands: CommandEntry[] = [];
-  if (Array.isArray(rawCmds)) {
-    for (const cmd of rawCmds) {
-      if (typeof cmd.glob === "string") {
-        commands.push({
-          glob: cmd.glob,
-          description: typeof cmd.description === "string" ? cmd.description : undefined,
-          pipe: cmd.pipe === true,
-          embedded: cmd.embedded === true,
-          redirect: parseRedirectMode(cmd.redirect),
-        });
-      }
-    }
-  }
-  return {
-    name: typeof raw.name === "string" ? raw.name : "unknown",
-    description: typeof raw.description === "string" ? raw.description : "",
-    includes: Array.isArray(raw.includes) ? (raw.includes as string[]) : undefined,
-    commands,
-  };
 }

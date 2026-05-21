@@ -15,7 +15,7 @@ export function validateCommand(command: string, policy: ResolvedPolicy): Valida
   }
 
   for (const seg of segments) {
-    if (!findMatch(seg.command, seg.requiresPipe, seg.requiresEmbedded, seg.redirect, policy.commands)) {
+    if (!matchSegment(seg.command, seg.requiresPipe, seg.requiresEmbedded, seg.redirect, policy.commands)) {
       const parts = [`Command segment not covered by any trust policy: ${seg.command}`];
       if (seg.requiresPipe) parts.push("(requires pipe: true)");
       if (seg.requiresEmbedded) parts.push("(requires embedded: true)");
@@ -67,7 +67,7 @@ export function generateGlobExamples(glob: string): { matches: string[]; nonMatc
   return { matches: [glob], nonMatches: [`${glob} extra-arg`, `${base} different`] };
 }
 
-function findMatch(command: string, needsPipe: boolean, needsEmbedded: boolean, needsRedirect: "none" | "append" | "overwrite", entries: CommandEntry[]): CommandEntry | null {
+function matchSegment(command: string, needsPipe: boolean, needsEmbedded: boolean, needsRedirect: "none" | "append" | "overwrite", entries: CommandEntry[]): CommandEntry | null {
   for (const entry of entries) {
     if (needsPipe && !entry.pipe) continue;
     if (needsEmbedded && !entry.embedded) continue;
@@ -79,12 +79,8 @@ function findMatch(command: string, needsPipe: boolean, needsEmbedded: boolean, 
 
 function findMatchingGroup(command: string, needsPipe: boolean, needsEmbedded: boolean, needsRedirect: "none" | "append" | "overwrite", policy: ResolvedPolicy): { groupName: string; glob: string } | null {
   for (const [groupName, group] of policy.groups) {
-    for (const entry of group.commands) {
-      if (needsPipe && !entry.pipe) continue;
-      if (needsEmbedded && !entry.embedded) continue;
-      if (!redirectAllowed(needsRedirect, entry.redirect)) continue;
-      if (minimatch(command, entry.glob, GLOB_OPTIONS)) return { groupName, glob: entry.glob };
-    }
+    const entry = matchSegment(command, needsPipe, needsEmbedded, needsRedirect, group.commands);
+    if (entry) return { groupName, glob: entry.glob };
   }
   return null;
 }
