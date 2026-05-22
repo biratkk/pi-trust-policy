@@ -1,5 +1,5 @@
-name: xargs-read
-description: xargs as a read-only passthrough — validates the inner command against active policies
+name: xargs-passthrough
+description: xargs as a passthrough — validates the inner command against active policies
 
 commands:
   - glob: "xargs {*,*/**}"

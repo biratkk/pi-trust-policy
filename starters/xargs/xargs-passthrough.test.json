@@ -1,5 +1,5 @@
 {
-  "policy": "xargs-read",
+  "policy": "xargs-passthrough",
   "cases": [
     { "command": "xargs grep pattern", "allowed": false, "label": "xargs grep without grep policy is denied" },
     { "command": "xargs cat", "allowed": false, "label": "xargs cat without cat policy is denied" }
