@@ -11,5 +11,6 @@ includes:
   - find-read
   - cut-read
   - sort-read
+  - xargs-read
 
 commands: []

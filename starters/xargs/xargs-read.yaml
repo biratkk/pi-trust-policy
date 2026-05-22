@@ -1,0 +1,11 @@
+name: xargs-read
+description: xargs as a read-only passthrough — validates the inner command against active policies
+
+commands:
+  - glob: "xargs {*,*/**}"
+    description: "Execute command on piped input (inner command must be trusted)"
+    pipe: true
+    embedded: false
+    passthrough: true
+    skipFlags: ["-0", "-t", "-r", "--no-run-if-empty", "--null", "--verbose"]
+    skipFlagsWithArg: ["-n", "-P", "-d", "--max-procs", "--max-args", "--delimiter"]

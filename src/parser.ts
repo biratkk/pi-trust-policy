@@ -80,13 +80,6 @@ function processCommand(node: Command, requiresPipe: boolean, requiresEmbedded: 
     return inner.segments.map((s) => ({ ...s, requiresEmbedded: true }));
   }
 
-  const xargsInner = extractXargsInner(node);
-  if (xargsInner) {
-    if (xargsInner === "unparseable") return null;
-    const redirect = detectRedirect(node);
-    return [{ command: xargsInner, requiresPipe, requiresEmbedded, redirect }];
-  }
-
   const segments: CommandSegment[] = [];
 
   for (const word of node.suffix) {
@@ -130,34 +123,6 @@ function extractBashCInner(node: Command): string | null {
   const idx = node.suffix.findIndex((w) => w.value === "-c");
   if (idx === -1 || idx + 1 >= node.suffix.length) return null;
   return node.suffix[idx + 1].value;
-}
-
-const XARGS_COMPLEX_FLAGS = new Set(["-I", "--replace", "-L", "--max-lines"]);
-
-function extractXargsInner(node: Command): string | "unparseable" | null {
-  if (node.name?.value !== "xargs") return null;
-  const args = node.suffix;
-  if (args.length === 0) return null;
-
-  let i = 0;
-  while (i < args.length) {
-    const val = args[i].value;
-    if (XARGS_COMPLEX_FLAGS.has(val)) return "unparseable";
-    if (val.startsWith("-I") && val.length > 2) return "unparseable";
-    if (val.startsWith("-")) {
-      if (val === "-n" || val === "-P" || val === "--max-procs" || val === "--max-args") {
-        i += 2;
-      } else {
-        i++;
-      }
-    } else {
-      break;
-    }
-  }
-
-  if (i >= args.length) return null;
-  const innerParts = args.slice(i).map((w) => w.text);
-  return innerParts.join(" ");
 }
 
 function processExpansions(word: Word, segments: CommandSegment[]): boolean {

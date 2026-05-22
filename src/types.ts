@@ -6,6 +6,9 @@ export interface CommandEntry {
   pipe: boolean;
   embedded: boolean;
   redirect: RedirectMode;
+  passthrough: boolean;
+  skipFlags: string[];
+  skipFlagsWithArg: string[];
 }
 
 export interface TrustPolicyGroup {

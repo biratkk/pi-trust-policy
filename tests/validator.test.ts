@@ -2,10 +2,19 @@ import { describe, it, expect } from "vitest";
 import { validateCommand, isValidGlob, generateGlobExamples } from "../src/validator";
 import type { ResolvedPolicy, CommandEntry } from "../src/types";
 
-function buildPolicy(entries: CommandEntry[]): ResolvedPolicy {
+function buildPolicy(entries: Partial<CommandEntry>[]): ResolvedPolicy {
+  const full: CommandEntry[] = entries.map((e) => ({
+    glob: e.glob ?? "",
+    pipe: e.pipe ?? false,
+    embedded: e.embedded ?? false,
+    redirect: e.redirect ?? "none",
+    passthrough: e.passthrough ?? false,
+    skipFlags: e.skipFlags ?? [],
+    skipFlagsWithArg: e.skipFlagsWithArg ?? [],
+  }));
   return {
-    commands: entries,
-    groups: new Map([["test-group", { description: "Test", commands: entries }]]),
+    commands: full,
+    groups: new Map([["test-group", { description: "Test", commands: full }]]),
     warnings: [],
   };
 }

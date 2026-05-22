@@ -74,5 +74,8 @@ function serializeCommand(cmd: CommandEntry): Record<string, unknown> {
   if (cmd.pipe) entry.pipe = true;
   if (cmd.embedded) entry.embedded = true;
   if (cmd.redirect !== "none") entry.redirect = cmd.redirect;
+  if (cmd.passthrough) entry.passthrough = true;
+  if (cmd.skipFlags.length > 0) entry.skipFlags = cmd.skipFlags;
+  if (cmd.skipFlagsWithArg.length > 0) entry.skipFlagsWithArg = cmd.skipFlagsWithArg;
   return entry;
 }

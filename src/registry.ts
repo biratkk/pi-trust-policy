@@ -91,6 +91,9 @@ function normalizeGroup(raw: Record<string, unknown>): TrustPolicyGroup {
           pipe: cmd.pipe === true,
           embedded: cmd.embedded === true,
           redirect: parseRedirectMode(cmd.redirect),
+          passthrough: cmd.passthrough === true,
+          skipFlags: Array.isArray(cmd.skipFlags) ? (cmd.skipFlags as string[]) : [],
+          skipFlagsWithArg: Array.isArray(cmd.skipFlagsWithArg) ? (cmd.skipFlagsWithArg as string[]) : [],
         });
       }
     }

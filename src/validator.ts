@@ -16,6 +16,12 @@ export function validateCommand(command: string, policy: ResolvedPolicy): Valida
 
   for (const seg of segments) {
     if (!matchSegment(seg.command, seg.requiresPipe, seg.requiresEmbedded, seg.redirect, policy.commands)) {
+      const passthrough = tryPassthrough(seg.command, seg.requiresPipe, seg.requiresEmbedded, seg.redirect, policy.commands);
+      if (passthrough) {
+        const innerResult = validateCommand(passthrough.innerCommand, policy);
+        if (!innerResult.allowed) return innerResult;
+        continue;
+      }
       const parts = [`Command segment not covered by any trust policy: ${seg.command}`];
       if (seg.requiresPipe) parts.push("(requires pipe: true)");
       if (seg.requiresEmbedded) parts.push("(requires embedded: true)");
@@ -72,15 +78,60 @@ function matchSegment(command: string, needsPipe: boolean, needsEmbedded: boolea
     if (needsPipe && !entry.pipe) continue;
     if (needsEmbedded && !entry.embedded) continue;
     if (!redirectAllowed(needsRedirect, entry.redirect)) continue;
-    if (minimatch(command, entry.glob, GLOB_OPTIONS)) return entry;
+    if (!minimatch(command, entry.glob, GLOB_OPTIONS)) continue;
+    if (entry.passthrough) continue;
+    return entry;
   }
   return null;
+}
+
+interface PassthroughResult {
+  kind: "command";
+  innerCommand: string;
+}
+
+function tryPassthrough(command: string, needsPipe: boolean, needsEmbedded: boolean, needsRedirect: "none" | "append" | "overwrite", entries: CommandEntry[]): PassthroughResult | null {
+  for (const entry of entries) {
+    if (needsPipe && !entry.pipe) continue;
+    if (needsEmbedded && !entry.embedded) continue;
+    if (!redirectAllowed(needsRedirect, entry.redirect)) continue;
+    if (!entry.passthrough) continue;
+    if (!minimatch(command, entry.glob, GLOB_OPTIONS)) continue;
+    const inner = extractInnerCommand(command, entry);
+    if (inner) return { kind: "command", innerCommand: inner };
+  }
+  return null;
+}
+
+function extractInnerCommand(command: string, entry: CommandEntry): string | null {
+  const tokens = command.split(/\s+/);
+  const skipSet = new Set(entry.skipFlags);
+  const skipWithArgSet = new Set(entry.skipFlagsWithArg);
+
+  let i = 1;
+  while (i < tokens.length) {
+    const token = tokens[i];
+    if (skipSet.has(token)) {
+      i++;
+    } else if (skipWithArgSet.has(token)) {
+      i += 2;
+    } else if (token.startsWith("-")) {
+      return null;
+    } else {
+      break;
+    }
+  }
+
+  if (i >= tokens.length) return null;
+  return tokens.slice(i).join(" ");
 }
 
 function findMatchingGroup(command: string, needsPipe: boolean, needsEmbedded: boolean, needsRedirect: "none" | "append" | "overwrite", policy: ResolvedPolicy): { groupName: string; glob: string } | null {
   for (const [groupName, group] of policy.groups) {
     const entry = matchSegment(command, needsPipe, needsEmbedded, needsRedirect, group.commands);
     if (entry) return { groupName, glob: entry.glob };
+    const passthrough = tryPassthrough(command, needsPipe, needsEmbedded, needsRedirect, group.commands);
+    if (passthrough) return { groupName, glob: "passthrough" };
   }
   return null;
 }

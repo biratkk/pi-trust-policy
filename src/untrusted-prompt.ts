@@ -36,7 +36,7 @@ async function persistToGroup(command: string, groupName: string, cwd: string, c
   const ok = await ctx.ui.select(`${preview}\n\nAdd to "${groupName}"?`, ["Yes", "Cancel"]);
   if (ok !== "Yes") return;
 
-  const entry: CommandEntry = { glob, pipe, embedded, redirect: "none" };
+  const entry: CommandEntry = { glob, pipe, embedded, redirect: "none", passthrough: false, skipFlags: [], skipFlagsWithArg: [] };
   const localDir = getLocalPolicyDir(cwd);
   const added = addCommandToGroup(groupName, entry, localDir) || addCommandToGroup(groupName, entry, GLOBAL_POLICY_DIR);
 

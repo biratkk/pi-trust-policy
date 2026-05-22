@@ -130,6 +130,31 @@
       "command": "echo hello",
       "allowed": false,
       "label": "echo not in read policy"
+    },
+    {
+      "command": "xargs grep -l pattern",
+      "allowed": true,
+      "label": "xargs grep passthrough"
+    },
+    {
+      "command": "xargs -0 grep pattern",
+      "allowed": true,
+      "label": "xargs with -0 flag passthrough"
+    },
+    {
+      "command": "xargs -n 1 head -5",
+      "allowed": true,
+      "label": "xargs with -n flag passthrough"
+    },
+    {
+      "command": "xargs rm -rf",
+      "allowed": false,
+      "label": "xargs rm denied (rm not in read)"
+    },
+    {
+      "command": "xargs -I {} grep {} file",
+      "allowed": false,
+      "label": "xargs with -I denied (unknown flag)"
     }
   ]
 }
