@@ -1,28 +1,135 @@
 {
   "policy": "unix-read",
   "cases": [
-    { "command": "grep -r TODO /src/", "allowed": true, "label": "grep with path" },
-    { "command": "cat /etc/hosts", "allowed": true, "label": "cat with absolute path" },
-    { "command": "ls -la ./src", "allowed": true, "label": "ls with flags" },
-    { "command": "head -n 5 /tmp/file.txt", "allowed": true, "label": "head with path" },
-    { "command": "tail -f /var/log/app.log", "allowed": true, "label": "tail follow" },
-    { "command": "wc -l /src/index.ts", "allowed": true, "label": "wc with path" },
-    { "command": "find . -name '*.ts'", "allowed": true, "label": "find by name" },
-    { "command": "cut -d: -f1 /etc/passwd", "allowed": true, "label": "cut with path" },
-    { "command": "sort /tmp/data.txt", "allowed": true, "label": "sort with path" },
-    { "command": "grep pattern file | wc -l", "allowed": true, "label": "pipeline: grep to wc" },
-    { "command": "find . -name '*.log' | head -5", "allowed": true, "label": "pipeline: find to head" },
-    { "command": "cat /etc/passwd | cut -d: -f1 | sort", "allowed": true, "label": "pipeline: 3 stages" },
-    { "command": "grep -r TODO /src/ | sort | tail -20", "allowed": true, "label": "pipeline: grep sort tail" },
-    { "command": "ls -la /tmp | grep test | wc -l", "allowed": true, "label": "pipeline: ls grep wc" },
-    { "command": "cat /etc/hosts && grep localhost /etc/hosts", "allowed": true, "label": "chained with &&" },
-    { "command": "ls /tmp; wc -l /tmp/file.txt", "allowed": true, "label": "chained with ;" },
-    { "command": "grep pattern file | sort > out.txt", "allowed": false, "label": "pipeline ending in redirect denied" },
-    { "command": "cat /etc/hosts > copy.txt", "allowed": false, "label": "redirect not allowed in read" },
-    { "command": "cat /etc/hosts >> log.txt", "allowed": false, "label": "append redirect not allowed in read" },
-    { "command": "sed 's/foo/bar/' file.txt", "allowed": false, "label": "sed is write, not read" },
-    { "command": "rm file.txt", "allowed": false, "label": "rm is destructive" },
-    { "command": "mv a.txt b.txt", "allowed": false, "label": "mv is destructive" },
-    { "command": "echo hello", "allowed": false, "label": "echo not in read policy" }
+    {
+      "command": "grep -r TODO /src/",
+      "allowed": true,
+      "label": "grep with path"
+    },
+    {
+      "command": "cat /etc/hosts",
+      "allowed": true,
+      "label": "cat with absolute path"
+    },
+    {
+      "command": "ls -la ./src",
+      "allowed": true,
+      "label": "ls with flags"
+    },
+    {
+      "command": "head -n 5 /tmp/file.txt",
+      "allowed": true,
+      "label": "head with path"
+    },
+    {
+      "command": "tail -f /var/log/app.log",
+      "allowed": true,
+      "label": "tail follow"
+    },
+    {
+      "command": "wc -l /src/index.ts",
+      "allowed": true,
+      "label": "wc with path"
+    },
+    {
+      "command": "find . -name '*.ts'",
+      "allowed": true,
+      "label": "find by name"
+    },
+    {
+      "command": "cut -d: -f1 /etc/passwd",
+      "allowed": true,
+      "label": "cut with path"
+    },
+    {
+      "command": "sort /tmp/data.txt",
+      "allowed": true,
+      "label": "sort with path"
+    },
+    {
+      "command": "grep pattern file | wc -l",
+      "allowed": true,
+      "label": "pipeline: grep to wc"
+    },
+    {
+      "command": "find . -name '*.log' | head -5",
+      "allowed": true,
+      "label": "pipeline: find to head"
+    },
+    {
+      "command": "find /Volumes/workplace -type f -name '*.ts' | xargs grep -l -i 'DLQ' 2>/dev/null | head -20",
+      "allowed": true,
+      "label": "find piped to xargs grep with 2>/dev/null"
+    },
+    {
+      "command": "xargs grep pattern 2>/dev/null",
+      "allowed": true,
+      "label": "xargs grep with stderr to /dev/null"
+    },
+    {
+      "command": "xargs rm -rf",
+      "allowed": false,
+      "label": "xargs rm not allowed in read policy"
+    },
+    {
+      "command": "cat /etc/passwd | cut -d: -f1 | sort",
+      "allowed": true,
+      "label": "pipeline: 3 stages"
+    },
+    {
+      "command": "grep -r TODO /src/ | sort | tail -20",
+      "allowed": true,
+      "label": "pipeline: grep sort tail"
+    },
+    {
+      "command": "ls -la /tmp | grep test | wc -l",
+      "allowed": true,
+      "label": "pipeline: ls grep wc"
+    },
+    {
+      "command": "cat /etc/hosts && grep localhost /etc/hosts",
+      "allowed": true,
+      "label": "chained with &&"
+    },
+    {
+      "command": "ls /tmp; wc -l /tmp/file.txt",
+      "allowed": true,
+      "label": "chained with ;"
+    },
+    {
+      "command": "grep pattern file | sort > out.txt",
+      "allowed": false,
+      "label": "pipeline ending in redirect denied"
+    },
+    {
+      "command": "cat /etc/hosts > copy.txt",
+      "allowed": false,
+      "label": "redirect not allowed in read"
+    },
+    {
+      "command": "cat /etc/hosts >> log.txt",
+      "allowed": false,
+      "label": "append redirect not allowed in read"
+    },
+    {
+      "command": "sed 's/foo/bar/' file.txt",
+      "allowed": false,
+      "label": "sed is write, not read"
+    },
+    {
+      "command": "rm file.txt",
+      "allowed": false,
+      "label": "rm is destructive"
+    },
+    {
+      "command": "mv a.txt b.txt",
+      "allowed": false,
+      "label": "mv is destructive"
+    },
+    {
+      "command": "echo hello",
+      "allowed": false,
+      "label": "echo not in read policy"
+    }
   ]
 }

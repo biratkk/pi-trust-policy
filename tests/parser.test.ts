@@ -117,5 +117,62 @@ describe("parseCommand", () => {
       const segs = segments("echo hello >> log.txt > out.txt");
       expect(segs[0].redirect).toBe("overwrite");
     });
+
+    it("ignores redirect to /dev/null", () => {
+      const segs = segments("grep pattern file 2>/dev/null");
+      expect(segs[0].redirect).toBe("none");
+    });
+
+    it("ignores stdout redirect to /dev/null", () => {
+      const segs = segments("grep pattern file >/dev/null");
+      expect(segs[0].redirect).toBe("none");
+    });
+
+    it("still detects redirect when mixed with /dev/null", () => {
+      const segs = segments("echo hello 2>/dev/null > file.txt");
+      expect(segs[0].redirect).toBe("overwrite");
+    });
+  });
+
+  describe("xargs", () => {
+    it("extracts inner command from simple xargs", () => {
+      const segs = segments("xargs grep -l pattern");
+      expect(segs).toHaveLength(1);
+      expect(segs[0].command).toBe("grep -l pattern");
+    });
+
+    it("skips xargs flags to find inner command", () => {
+      const segs = segments("xargs -0 grep pattern");
+      expect(segs).toHaveLength(1);
+      expect(segs[0].command).toBe("grep pattern");
+    });
+
+    it("skips -n flag with argument", () => {
+      const segs = segments("xargs -n 1 rm");
+      expect(segs).toHaveLength(1);
+      expect(segs[0].command).toBe("rm");
+    });
+
+    it("marks xargs with -I as unparseable", () => {
+      expectUnparseable("xargs -I {} grep {} file");
+    });
+
+    it("preserves pipe context", () => {
+      const segs = segments("find . -name '*.ts' | xargs grep pattern");
+      expect(segs).toHaveLength(2);
+      expect(segs[0].command).toBe("find . -name '*.ts'");
+      expect(segs[1].command).toBe("grep pattern");
+      expect(segs.every((s) => s.requiresPipe)).toBe(true);
+    });
+
+    it("detects redirect on xargs command", () => {
+      const segs = segments("xargs grep pattern > out.txt");
+      expect(segs[0].redirect).toBe("overwrite");
+    });
+
+    it("ignores 2>/dev/null on xargs", () => {
+      const segs = segments("xargs grep pattern 2>/dev/null");
+      expect(segs[0].redirect).toBe("none");
+    });
   });
 });
