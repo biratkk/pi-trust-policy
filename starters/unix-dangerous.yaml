@@ -6,6 +6,5 @@ includes:
   - shred-destructive
   - truncate-destructive
   - mv-destructive
-  - xargs-passthrough
 
 commands: []

@@ -57,21 +57,6 @@
       "label": "pipeline: find to head"
     },
     {
-      "command": "find /Volumes/workplace -type f -name '*.ts' | xargs grep -l -i 'DLQ' 2>/dev/null | head -20",
-      "allowed": true,
-      "label": "find piped to xargs grep with 2>/dev/null"
-    },
-    {
-      "command": "xargs grep pattern 2>/dev/null",
-      "allowed": true,
-      "label": "xargs grep with stderr to /dev/null"
-    },
-    {
-      "command": "xargs rm -rf",
-      "allowed": false,
-      "label": "xargs rm not allowed in read policy"
-    },
-    {
       "command": "cat /etc/passwd | cut -d: -f1 | sort",
       "allowed": true,
       "label": "pipeline: 3 stages"
@@ -130,31 +115,6 @@
       "command": "echo hello",
       "allowed": false,
       "label": "echo not in read policy"
-    },
-    {
-      "command": "xargs grep -l pattern",
-      "allowed": true,
-      "label": "xargs grep passthrough"
-    },
-    {
-      "command": "xargs -0 grep pattern",
-      "allowed": true,
-      "label": "xargs with -0 flag passthrough"
-    },
-    {
-      "command": "xargs -n 1 head -5",
-      "allowed": true,
-      "label": "xargs with -n flag passthrough"
-    },
-    {
-      "command": "xargs rm -rf",
-      "allowed": false,
-      "label": "xargs rm denied (rm not in read)"
-    },
-    {
-      "command": "xargs -I {} grep {} file",
-      "allowed": false,
-      "label": "xargs with -I denied (unknown flag)"
     }
   ]
 }

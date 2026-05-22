@@ -8,6 +8,5 @@ includes:
   - cp-write
   - curl-write
   - sort-write
-  - xargs-passthrough
 
 commands: []

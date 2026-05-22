@@ -1,0 +1,7 @@
+{
+  "policy": "unix-passthrough",
+  "cases": [
+    { "command": "xargs grep -l pattern", "allowed": false, "label": "xargs grep denied without grep policy" },
+    { "command": "xargs rm -rf /tmp", "allowed": false, "label": "xargs rm denied without rm policy" }
+  ]
+}

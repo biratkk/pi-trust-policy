@@ -1,0 +1,7 @@
+name: unix-passthrough
+description: Command wrappers that delegate to other commands — the inner command is validated against active policies
+
+includes:
+  - xargs-passthrough
+
+commands: []
