@@ -1,0 +1,20 @@
+name: date-dangerous
+description: date commands that modify the system clock (requires root)
+
+commands:
+  - glob: "date -s *"
+    description: "Set system clock with -s"
+    pipe: false
+    embedded: false
+  - glob: "date --set *"
+    description: "Set system clock with --set"
+    pipe: false
+    embedded: false
+  - glob: "date {*,*/**}"
+    description: "All date invocations including clock modification"
+    pipe: true
+    embedded: true
+  - glob: "date"
+    description: "Display current date and time"
+    pipe: true
+    embedded: true

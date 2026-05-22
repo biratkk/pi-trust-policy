@@ -1,0 +1,10 @@
+{
+  "policy": "date-dangerous",
+  "cases": [
+    { "command": "date -s '2024-01-01'", "allowed": true, "label": "date -s sets clock" },
+    { "command": "date --set '2024-01-01'", "allowed": true, "label": "date --set sets clock" },
+    { "command": "date +%Y-%m-%d", "allowed": true, "label": "format string also allowed" },
+    { "command": "date", "allowed": true, "label": "bare date allowed" },
+    { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
+  ]
+}
