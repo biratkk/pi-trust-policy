@@ -1,0 +1,12 @@
+name: date-read
+description: Read-only date for displaying current date and time
+
+commands:
+  - glob: "date"
+    description: "Display current date and time"
+    pipe: true
+    embedded: true
+  - glob: "date {*,*/**}"
+    description: "Display date with format or flags"
+    pipe: true
+    embedded: true
