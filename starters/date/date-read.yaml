@@ -6,7 +6,27 @@ commands:
     description: "Display current date and time"
     pipe: true
     embedded: true
-  - glob: "date {*,*/**}"
-    description: "Display date with format or flags"
+  - glob: "date +*"
+    description: "Display date with format string"
+    pipe: true
+    embedded: true
+  - glob: "date -u*"
+    description: "Display UTC date"
+    pipe: true
+    embedded: true
+  - glob: "date -d *"
+    description: "Display parsed date string"
+    pipe: true
+    embedded: true
+  - glob: "date --date *"
+    description: "Display parsed date string"
+    pipe: true
+    embedded: true
+  - glob: "date --iso-8601*"
+    description: "Display date in ISO 8601 format"
+    pipe: true
+    embedded: true
+  - glob: "date --rfc-3339*"
+    description: "Display date in RFC 3339 format"
     pipe: true
     embedded: true

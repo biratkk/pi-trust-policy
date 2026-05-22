@@ -5,6 +5,11 @@
     { "command": "date +%Y-%m-%d", "allowed": true, "label": "date with format string" },
     { "command": "date -u", "allowed": true, "label": "UTC date" },
     { "command": "date --iso-8601", "allowed": true, "label": "ISO format" },
+    { "command": "date --rfc-3339=seconds", "allowed": true, "label": "RFC 3339 format" },
+    { "command": "date -d 'next monday'", "allowed": true, "label": "parse date string" },
+    { "command": "date --date '2024-01-01'", "allowed": true, "label": "parse date with --date" },
+    { "command": "date -s '2024-01-01'", "allowed": false, "label": "date -s sets clock (dangerous)" },
+    { "command": "date --set '2024-01-01'", "allowed": false, "label": "date --set sets clock (dangerous)" },
     { "command": "date > file.txt", "allowed": false, "label": "date with redirect denied" },
     { "command": "rm file.txt", "allowed": false, "label": "unrelated command" }
   ]
