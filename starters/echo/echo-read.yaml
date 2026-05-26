@@ -1,0 +1,12 @@
+name: echo-read
+description: Read-only echo for displaying text to stdout
+
+commands:
+  - glob: "echo {*,*/**}"
+    description: "Display text"
+    pipe: true
+    embedded: true
+  - glob: "echo"
+    description: "Display empty line"
+    pipe: true
+    embedded: true

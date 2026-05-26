@@ -128,8 +128,8 @@
     },
     {
       "command": "echo hello",
-      "allowed": false,
-      "label": "echo not in read policy"
+      "allowed": true,
+      "label": "echo displays text"
     }
   ]
 }

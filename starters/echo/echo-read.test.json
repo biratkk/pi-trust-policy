@@ -1,0 +1,13 @@
+{
+  "policy": "echo-read",
+  "cases": [
+    { "command": "echo hello", "allowed": true, "label": "echo simple text" },
+    { "command": "echo -n hello", "allowed": true, "label": "echo with -n flag" },
+    { "command": "echo -e 'hello\\nworld'", "allowed": true, "label": "echo with escape flag" },
+    { "command": "echo", "allowed": true, "label": "bare echo" },
+    { "command": "echo foo bar baz", "allowed": true, "label": "echo multiple words" },
+    { "command": "echo hello > out.txt", "allowed": false, "label": "echo with redirect" },
+    { "command": "echo hello >> log.txt", "allowed": false, "label": "echo with append redirect" },
+    { "command": "rm -rf /", "allowed": false, "label": "unrelated destructive command" }
+  ]
+}

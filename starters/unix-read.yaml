@@ -14,5 +14,6 @@ includes:
   - date-read
   - pwd-read
   - cd-read
+  - echo-read
 
 commands: []
