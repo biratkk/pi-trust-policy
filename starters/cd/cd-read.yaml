@@ -1,0 +1,12 @@
+name: cd-read
+description: Read-only cd for changing the current working directory
+
+commands:
+  - glob: "cd {*,*/**}"
+    description: "Change directory"
+    pipe: true
+    embedded: true
+  - glob: "cd"
+    description: "Change to home directory"
+    pipe: true
+    embedded: true

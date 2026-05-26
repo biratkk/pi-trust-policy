@@ -12,5 +12,7 @@ includes:
   - cut-read
   - sort-read
   - date-read
+  - pwd-read
+  - cd-read
 
 commands: []

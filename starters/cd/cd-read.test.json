@@ -1,0 +1,11 @@
+{
+  "policy": "cd-read",
+  "cases": [
+    { "command": "cd", "allowed": true, "label": "bare cd" },
+    { "command": "cd /tmp", "allowed": true, "label": "cd to absolute path" },
+    { "command": "cd ../src", "allowed": true, "label": "cd to relative path" },
+    { "command": "cd ~", "allowed": true, "label": "cd to home" },
+    { "command": "cd /tmp && rm -rf /", "allowed": false, "label": "cd chained with destructive" },
+    { "command": "rm -rf /", "allowed": false, "label": "unrelated destructive command" }
+  ]
+}

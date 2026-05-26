@@ -82,6 +82,21 @@
       "label": "chained with ;"
     },
     {
+      "command": "cat ~/.zshrc 2>/dev/null | head -80",
+      "allowed": true,
+      "label": "cat with stderr to devnull piped to head"
+    },
+    {
+      "command": "pwd",
+      "allowed": true,
+      "label": "pwd prints working directory"
+    },
+    {
+      "command": "cd /tmp",
+      "allowed": true,
+      "label": "cd to directory"
+    },
+    {
       "command": "grep pattern file | sort > out.txt",
       "allowed": false,
       "label": "pipeline ending in redirect denied"

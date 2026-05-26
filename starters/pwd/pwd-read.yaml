@@ -1,0 +1,8 @@
+name: pwd-read
+description: Read-only pwd for displaying current working directory
+
+commands:
+  - glob: "pwd"
+    description: "Print current working directory"
+    pipe: true
+    embedded: true

@@ -1,0 +1,9 @@
+{
+  "policy": "pwd-read",
+  "cases": [
+    { "command": "pwd", "allowed": true, "label": "bare pwd" },
+    { "command": "pwd | pwd", "allowed": true, "label": "pwd piped to itself" },
+    { "command": "pwd > out.txt", "allowed": false, "label": "pwd with redirect" },
+    { "command": "rm -rf /", "allowed": false, "label": "unrelated destructive command" }
+  ]
+}
