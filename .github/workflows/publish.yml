@@ -32,7 +32,7 @@ jobs:
           git commit -m "release: v${VERSION}" || true
           git tag "v${VERSION}"
           git push
-          git push --tags
+          git push --tags --force
 
       - run: npm publish --access public --provenance
         env:
