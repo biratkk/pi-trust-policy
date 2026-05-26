@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, copyFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { POLICIES_DIR, BUNDLED_STARTERS_DIR } from "./paths";
+import { recordInstalledHashes } from "./update-checker";
 
 /**
  * Migrates bundled starter policies into ~/.pi/agent/trust-policy/policies/.
@@ -10,7 +11,9 @@ import { POLICIES_DIR, BUNDLED_STARTERS_DIR } from "./paths";
 export function migrateStarterPolicies(): void {
   if (!existsSync(BUNDLED_STARTERS_DIR)) return;
   mkdirSync(POLICIES_DIR, { recursive: true });
+  const hadPolicies = existsSync(POLICIES_DIR) && readdirSync(POLICIES_DIR).length > 0;
   copyDirRecursive(BUNDLED_STARTERS_DIR, POLICIES_DIR);
+  if (!hadPolicies) recordInstalledHashes();
 }
 
 function copyDirRecursive(src: string, dest: string): void {
